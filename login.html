@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ZAIKABOX - Sign Up</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Titillium+Web:wght@300;400;600;700&family=Gabarito:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body class="login-page">
+    <!-- Main Container with Two Columns -->
+    <div class="main-container">
+        <!-- Overlapping Cards Container -->
+        <div class="content-container">
+            <!-- Left Card - Sign Up Splash Screen -->
+            <div class="photo-section">
+                <div class="photo-header">
+                    <h2 class="signup-trigger active">SIGN UP</h2>
+                    <p class="signin-trigger">SIGN IN</p>
+                </div>
+            </div>
+
+            <!-- Right Card - Sign Up Form -->
+            <div class="login-section">
+                <section class="login-card">
+                    <!-- Signup Form -->
+                    <form id="signup-form" class="auth-form active">
+                        <div class="form-field">
+                            <label for="signup-email">E-MAIL</label>
+                            <input type="email" id="signup-email" name="email" placeholder="Your e-mail goes here" required />
+                        </div>
+                        <div class="form-field">
+                            <label for="signup-password">PASSWORD</label>
+                            <input type="password" id="signup-password" name="password" placeholder="••••••••" minlength="6" required />
+                        </div>
+                        <div class="form-field checkbox-field">
+                            <input type="checkbox" id="terms-checkbox" name="terms" required />
+                            <label for="terms-checkbox">
+                                I agree all statements in <a href="#" class="terms-link">terms of service</a>
+                            </label>
+                        </div>
+                        <div class="form-actions">
+                            <button type="submit">SIGN UP</button>
+                        </div>
+                        <div class="member-link">
+                            <a href="#" id="member-link">I'm already member</a>
+                        </div>
+                    </form>
+                </section>
+            </div>
+        </div>
+    </div>
+
+    <script type="module" src="./auth.js"></script>
+    <script src="./photos.js"></script>
+</body>
+</html> 
