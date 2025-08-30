@@ -1,0 +1,982 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ZAIKABOX - Authentication</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Titillium+Web:wght@300;400;600;700&family=Gabarito:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- Firebase Authentication -->
+    <script type="module">
+        import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js';
+        import { initFirebase } from './firebase-config.js';
+
+        // Initialize Firebase and get auth
+        const { auth } = initFirebase();
+
+        // Check if user is already logged in
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+                console.log('User already logged in:', user.email);
+                window.location.href = 'index.html';
+            }
+
+        // Setup form submission handlers
+        function setupFormSubmission() {
+            const signupForm = document.getElementById('signup-form');
+            
+            if (signupForm) {
+                signupForm.addEventListener('submit', async (event) => {
+                    event.preventDefault();
+                    
+                    if (signupForm.classList.contains('login-mode')) {
+                        // Handle login
+                        const email = document.getElementById('login-email').value;
+                        const password = document.getElementById('login-password').value;
+                        await window.handleLogin(email, password);
+                    } else {
+                        // Handle signup
+                        const email = document.getElementById('signup-email').value;
+                        const password = document.getElementById('signup-password').value;
+                        const termsChecked = document.getElementById('terms-checkbox').checked;
+                        await window.handleSignup(email, password, termsChecked);
+                    }
+                });
+            }
+        }
+        });
+
+        // Toast notification system
+        function showToast(message, type = 'success', durationMs = 3200) {
+            let toastContainer = document.querySelector('.toast-container');
+            if (toastContainer) {
+                toastContainer.remove();
+            }
+
+            toastContainer = document.createElement('div');
+            toastContainer.className = 'toast-container';
+
+            const toast = document.createElement('div');
+            toast.className = `toast ${type}`;
+            toast.textContent = message;
+
+            toastContainer.appendChild(toast);
+            document.body.appendChild(toastContainer);
+
+            setTimeout(() => {
+                if (toastContainer && toastContainer.parentNode) {
+                    toastContainer.remove();
+                }
+            }, durationMs);
+        }
+
+        // Handle signup
+        async function handleSignup(email, password, termsChecked) {
+            if (!termsChecked) {
+                showToast('Please agree to the terms of service', 'error');
+                return;
+            }
+
+            try {
+                const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+                console.log('User created successfully:', userCredential.user.email);
+                showToast('Account created successfully! Redirecting...', 'success');
+                setTimeout(() => {
+                    window.location.href = 'index.html';
+                }, 1500);
+            } catch (error) {
+                console.error('Signup error:', error);
+                showToast(error.message, 'error');
+            }
+        }
+
+        // Handle login
+        async function handleLogin(email, password) {
+            try {
+                const userCredential = await signInWithEmailAndPassword(auth, email, password);
+                console.log('User signed in successfully:', userCredential.user.email);
+                showToast('Login successful! Redirecting...', 'success');
+                setTimeout(() => {
+                    window.location.href = 'index.html';
+                }, 1500);
+            } catch (error) {
+                console.error('Login error:', error);
+                showToast(error.message, 'error');
+            }
+        }
+
+        // Make functions globally available
+        window.handleSignup = handleSignup;
+        window.handleLogin = handleLogin;
+    </script>
+    
+    <style>
+        /* Variables */
+        :root {
+            --grey: rgba(53, 47, 68, .4);
+            --dark-grey: rgba(0, 0, 0, 0.6);
+            --white: rgba(255, 255, 255, 1);
+            --white-alpha: rgba(255, 255, 255, .7);
+            --light-orange: rgb(255, 187, 92);
+            --orange: rgb(255, 155, 80);
+            --dark-orange: rgb(226, 94, 62);
+            --red: rgb(198, 61, 47);
+            --yellow: rgb(255, 250, 221);
+            --blue: rgb(142, 205, 221);
+            --bl-font: rgba(0, 0, 0, 0.8);
+            --grey-font: rgba(0, 0, 0, 0.5);
+            --wh-font: rgba(255, 255, 255, 1);
+            --transition: .3s;
+            --box-shadow: 0 0 7px var(--grey);
+            --margin: 20px;
+            --border-radius: 5px;
+            
+            /* Image-inspired colors */
+            --image-blue: #2F70F8;
+            --image-dark-blue: #2A4A7F;
+            --image-light-blue: #4A90E2;
+            --image-white: #FFFFFF;
+            --image-text-light: #B8C5D6;
+            --image-text-dark: #1E3A5F;
+        }
+
+        /* Global Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Titillium Web', sans-serif;
+        }
+
+        body.login-page {
+            background: linear-gradient(135deg, var(--image-white) 0%, var(--image-white) 50%, var(--image-blue) 50%, var(--image-blue) 100%);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            padding: 0;
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Logo in top-right corner */
+        body.login-page::before {
+            content: 'Z';
+            position: fixed;
+            top: 30px;
+            right: 30px;
+            width: 50px;
+            height: 50px;
+            background: var(--image-white);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            font-weight: bold;
+            color: var(--image-dark-blue);
+            z-index: 1000;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Main Container Layout */
+        .main-container {
+            display: flex;
+            min-height: 100vh;
+            margin-top: 0;
+            padding: 0;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+
+        /* Overlapping Cards Container */
+        .content-container {
+            display: flex;
+            width: 100%;
+            max-width: 1200px;
+            height: 600px;
+            position: relative;
+            background: transparent;
+            box-shadow: none;
+            border: none;
+            overflow: visible;
+        }
+
+        /* Left Card - Sign Up Splash Screen */
+        .photo-section {
+            position: absolute;
+            left: 50px;
+            top: 50px;
+            width: 500px;
+            height: 500px;
+            background: url('https://images.unsplash.com/photo-1506905925346-21bda4d32df4?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80') center/cover;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
+            z-index: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            padding: 40px;
+        }
+
+        .photo-header {
+            text-align: left;
+            margin: 0;
+            color: var(--image-white);
+            position: relative;
+            z-index: 2;
+        }
+
+        .photo-header h2 {
+            font-size: 3.5rem;
+            font-weight: 800;
+            margin-bottom: 0;
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+            letter-spacing: 2px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            user-select: none;
+        }
+
+        .photo-header h2:hover {
+            transform: scale(1.05);
+            text-shadow: 0 4px 20px rgba(0, 0, 0, 0.7);
+        }
+
+        .photo-header h2.active {
+            color: var(--image-light-blue);
+            text-shadow: 0 0 20px rgba(74, 144, 226, 0.8);
+        }
+
+        .photo-header h2.active::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: var(--image-light-blue);
+            border-radius: 2px;
+            box-shadow: 0 0 10px rgba(74, 144, 226, 0.5);
+        }
+
+        .photo-header p {
+            font-size: 1.5rem;
+            color: var(--image-white);
+            font-weight: 400;
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+            margin-top: 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            user-select: none;
+        }
+
+        .photo-header p:hover {
+            transform: scale(1.05);
+            text-shadow: 0 4px 20px rgba(0, 0, 0, 0.7);
+        }
+
+        .photo-header p.active {
+            color: var(--image-light-blue);
+            text-shadow: 0 0 20px rgba(74, 144, 226, 0.8);
+        }
+
+        .photo-header p.active::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: var(--image-light-blue);
+            border-radius: 2px;
+            box-shadow: 0 0 10px rgba(74, 144, 226, 0.5);
+        }
+
+        /* Right Card - Form */
+        .login-section {
+            position: absolute;
+            right: 100px;
+            bottom: 50px;
+            width: 400px;
+            height: 450px;
+            background: var(--image-dark-blue);
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2);
+            z-index: 3;
+            padding: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-left: -150px;
+        }
+
+        .login-card {
+            width: 100%;
+            background: transparent;
+            border-radius: 0;
+            box-shadow: none;
+            overflow: visible;
+            position: relative;
+            margin: 0;
+        }
+
+        .auth-form {
+            display: block;
+            padding: 0;
+            background: transparent;
+            opacity: 1;
+            visibility: visible;
+            min-height: auto;
+            border-radius: 0;
+            width: 100%;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            transform: translateX(0);
+        }
+
+        .auth-form.fade-out {
+            opacity: 0;
+            transform: translateX(20px);
+        }
+
+        .auth-form.fade-in {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        .form-field {
+            margin-bottom: 30px;
+        }
+
+        .form-field label {
+            display: block;
+            margin-bottom: 10px;
+            color: var(--image-white);
+            font-weight: 600;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .form-field input {
+            width: 100%;
+            padding: 15px 0 10px;
+            border: none;
+            border-bottom: 2px solid var(--image-white);
+            border-radius: 0;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            background: transparent;
+            color: var(--image-white);
+        }
+
+        .form-field input:focus {
+            outline: none;
+            border-bottom-color: var(--image-light-blue);
+            box-shadow: 0 0 10px rgba(74, 144, 226, 0.3);
+        }
+
+        .form-field input::placeholder {
+            color: var(--image-text-light);
+            opacity: 1;
+        }
+
+        /* Checkbox and terms */
+        .form-field.checkbox-field {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 30px;
+        }
+
+        .form-field.checkbox-field input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            accent-color: var(--image-light-blue);
+            margin: 0;
+        }
+
+        .form-field.checkbox-field label {
+            margin: 0;
+            font-size: 0.85rem;
+            font-weight: 400;
+            text-transform: none;
+            letter-spacing: 0.5px;
+            line-height: 1.4;
+        }
+
+        .form-field.checkbox-field .terms-link {
+            color: var(--image-light-blue);
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .form-actions {
+            margin-top: 40px;
+        }
+
+        .form-actions button {
+            width: 100%;
+            padding: 16px 32px;
+            border: 2px solid var(--image-light-blue);
+            border-radius: 50px;
+            background: var(--image-white);
+            color: var(--image-dark-blue);
+            font-size: 1rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 20px;
+        }
+
+        .form-actions button:hover {
+            background: var(--image-light-blue);
+            color: var(--image-white);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(74, 144, 226, 0.3);
+        }
+
+        .form-actions button:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        /* Member link */
+        .member-link {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .member-link a {
+            color: var(--image-text-light);
+            text-decoration: none;
+            font-size: 0.9rem;
+            font-weight: 500;
+            transition: color 0.3s ease;
+        }
+
+        .member-link a:hover {
+            color: var(--image-white);
+        }
+
+        /* Password Strength Indicator */
+        .password-strength {
+            margin-top: 8px;
+            padding: 8px 0;
+        }
+
+        .strength-bar {
+            width: 100%;
+            height: 4px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 2px;
+            overflow: hidden;
+            margin-bottom: 8px;
+        }
+
+        .strength-fill {
+            height: 100%;
+            width: 0%;
+            transition: all 0.3s ease;
+            border-radius: 2px;
+        }
+
+        .strength-fill.weak {
+            width: 25%;
+            background: linear-gradient(90deg, #ef4444, #f87171);
+        }
+
+        .strength-fill.fair {
+            width: 50%;
+            background: linear-gradient(90deg, #f59e0b, #fbbf24);
+        }
+
+        .strength-fill.good {
+            width: 75%;
+            background: linear-gradient(90deg, #3b82f6, #60a5fa);
+        }
+
+        .strength-fill.strong {
+            width: 100%;
+            background: linear-gradient(90deg, #10b981, #34d399);
+        }
+
+        .strength-text {
+            font-size: 0.8rem;
+            color: var(--image-text-light);
+            font-weight: 500;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .strength-text.weak { color: #f87171; }
+        .strength-text.fair { color: #fbbf24; }
+        .strength-text.good { color: #60a5fa; }
+        .strength-text.strong { color: #34d399; }
+
+        .strength-requirements {
+            margin-top: 12px;
+        }
+
+        .requirement {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 6px;
+            font-size: 0.75rem;
+            color: var(--image-text-light);
+        }
+
+        .requirement.met {
+            color: #34d399;
+        }
+
+        .check-icon {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            border: 1px solid var(--image-text-light);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 8px;
+        }
+
+        .requirement.met .check-icon {
+            background: #34d399;
+            border-color: #34d399;
+            color: white;
+        }
+
+        /* Toast notifications */
+        .toast-container {
+            position: fixed;
+            top: 100px;
+            right: 30px;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            z-index: 9999;
+        }
+
+        .toast {
+            min-width: 320px;
+            max-width: 400px;
+            padding: 20px 24px;
+            border-radius: 12px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12);
+            color: var(--white);
+            font-weight: 600;
+            line-height: 1.5;
+            font-size: 14px;
+            opacity: 0;
+            transform: translateX(100%);
+            animation: toast-slide-in 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55) forwards, toast-slide-out 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55) 3.6s forwards;
+        }
+
+        .toast.success {
+            background: linear-gradient(135deg, #10b981, #059669);
+        }
+
+        .toast.error {
+            background: linear-gradient(135deg, #ef4444, #dc2626);
+        }
+
+        @keyframes toast-slide-in {
+            from { opacity: 0; transform: translateX(100%); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        @keyframes toast-slide-out {
+            from { opacity: 1; transform: translateX(0); }
+            to { opacity: 0; transform: translateX(100%); }
+        }
+
+        /* Loading spinner */
+        .loading-spinner {
+            width: 20px;
+            height: 20px;
+            border: 2px solid transparent;
+            border-top: 2px solid currentColor;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-right: 10px;
+            display: inline-block;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Responsive Design */
+        @media (max-width: 1024px) {
+            .content-container {
+                max-width: 900px;
+                height: 500px;
+            }
+            
+            .photo-section {
+                width: 400px;
+                height: 400px;
+                left: 30px;
+                top: 30px;
+            }
+            
+            .login-section {
+                width: 350px;
+                height: 400px;
+                right: 80px;
+                bottom: 30px;
+                padding: 30px;
+            }
+            
+            .photo-header h2 {
+                font-size: 2.8rem;
+            }
+            
+            .photo-header p {
+                font-size: 1.2rem;
+            }
+        }
+
+        @media (max-width: 768px) {
+            body.login-page {
+                background: var(--image-blue);
+            }
+            
+            .content-container {
+                flex-direction: column;
+                height: auto;
+                max-width: 400px;
+                gap: 30px;
+            }
+            
+            .photo-section {
+                position: relative;
+                width: 100%;
+                height: 300px;
+                left: auto;
+                top: auto;
+                margin-bottom: 20px;
+            }
+            
+            .login-section {
+                position: relative;
+                width: 100%;
+                height: auto;
+                right: auto;
+                bottom: auto;
+                min-height: 400px;
+                margin-left: 0;
+            }
+            
+            .photo-header h2 {
+                font-size: 2.5rem;
+            }
+            
+            .photo-header p {
+                font-size: 1.1rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .content-container {
+                max-width: 100%;
+                padding: 20px;
+            }
+            
+            .photo-section {
+                height: 250px;
+                padding: 30px 20px;
+            }
+            
+            .login-section {
+                padding: 30px 20px;
+            }
+            
+            .photo-header h2 {
+                font-size: 2rem;
+            }
+            
+            .photo-header p {
+                font-size: 1rem;
+            }
+            
+            .form-field input {
+                padding: 12px 0 8px;
+            }
+            
+            .form-actions button {
+                padding: 14px 24px;
+            }
+        }
+    </style>
+</head>
+<body class="login-page">
+    <!-- Main Container with Two Columns -->
+    <div class="main-container">
+        <!-- Overlapping Cards Container -->
+        <div class="content-container">
+            <!-- Left Card - Sign Up Splash Screen -->
+            <div class="photo-section">
+                <div class="photo-header">
+                    <h2 class="signup-trigger active">SIGN UP</h2>
+                    <p class="signin-trigger">SIGN IN</p>
+                </div>
+            </div>
+
+            <!-- Right Card - Sign Up Form -->
+            <div class="login-section">
+                <section class="login-card">
+                    <!-- Signup Form -->
+                    <form id="signup-form" class="auth-form active">
+                        <div class="form-field">
+                            <label for="signup-email">E-MAIL</label>
+                            <input type="email" id="signup-email" name="email" placeholder="Your e-mail goes here" required />
+                        </div>
+                        <div class="form-field">
+                            <label for="signup-password">PASSWORD</label>
+                            <input type="password" id="signup-password" name="password" placeholder="••••••••" minlength="6" required />
+
+                        </div>
+                        <div class="form-field checkbox-field">
+                            <input type="checkbox" id="terms-checkbox" name="terms" required />
+                            <label for="terms-checkbox">
+                                I agree all statements in <a href="#" class="terms-link">terms of service</a>
+                            </label>
+                        </div>
+                        <div class="form-actions">
+                            <button type="submit" id="auth-submit-btn">SIGN UP</button>
+                        </div>
+                        <div class="member-link">
+                            <a href="#" id="member-link">I'm already member</a>
+                        </div>
+                    </form>
+                </section>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Firebase error message mapping
+        const firebaseErrorMessages = {
+            'auth/email-already-in-use': 'This email is already registered. Please use a different email or sign in.',
+            'auth/weak-password': 'Password is too weak. Please choose a stronger password.',
+            'auth/invalid-email': 'Please enter a valid email address.',
+            'auth/user-not-found': 'No account found with this email. Please sign up first.',
+            'auth/wrong-password': 'Incorrect password. Please try again.',
+            'auth/invalid-credential': 'Invalid email or password. Please check your credentials.',
+            'auth/too-many-requests': 'Too many failed attempts. Please try again later.',
+            'auth/network-request-failed': 'Network error. Please check your connection and try again.'
+        };
+
+        // Get user-friendly error message
+        function getFriendlyErrorMessage(error) {
+            return firebaseErrorMessages[error.code] || error.message || 'An unexpected error occurred. Please try again.';
+        }
+
+        // Switch to signup form
+        function switchToSignup() {
+            const signupForm = document.getElementById('signup-form');
+            const signupTrigger = document.querySelector('.signup-trigger');
+            const signinTrigger = document.querySelector('.signin-trigger');
+            
+            if (!signupForm) return;
+            
+            // Update active states on left side
+            if (signupTrigger && signinTrigger) {
+                signupTrigger.classList.add('active');
+                signinTrigger.classList.remove('active');
+            }
+            
+            // Animate form change to signup
+            animateFormChange(signupForm, 'signup');
+        }
+
+        // Switch to signin form
+        function switchToSignin() {
+            const signupForm = document.getElementById('signup-form');
+            const signupTrigger = document.querySelector('.signup-trigger');
+            const signinTrigger = document.querySelector('.signin-trigger');
+            
+            if (!signupForm) return;
+            
+            // Update active states on left side
+            if (signupTrigger && signinTrigger) {
+                signinTrigger.classList.add('active');
+                signupTrigger.classList.remove('active');
+            }
+            
+            // Animate form change to signin
+            animateFormChange(signupForm, 'signin');
+        }
+
+        // Animate form change with smooth transition
+        function animateFormChange(form, mode) {
+            console.log('Animating form change to:', mode);
+            
+            // Add fade out effect
+            form.classList.add('fade-out');
+            
+            setTimeout(() => {
+                if (mode === 'signup') {
+                    // Switch to signup form
+                    form.classList.remove('login-mode');
+                    form.innerHTML = `
+                        <div class="form-field">
+                            <label for="signup-email">E-MAIL</label>
+                            <input type="email" id="signup-email" name="email" placeholder="Your e-mail goes here" required />
+                        </div>
+                        <div class="form-field">
+                            <label for="signup-password">PASSWORD</label>
+                            <input type="password" id="signup-password" name="password" placeholder="••••••••" minlength="6" required />
+                        </div>
+                        <div class="form-field checkbox-field">
+                            <input type="checkbox" id="terms-checkbox" name="terms" required />
+                            <label for="terms-checkbox">
+                                I agree all statements in <a href="#" class="terms-link">terms of service</a>
+                            </label>
+                        </div>
+                        <div class="form-actions">
+                            <button type="submit" id="auth-submit-btn">SIGN UP</button>
+                        </div>
+                        <div class="member-link">
+                            <a href="#" id="member-link">I'm already member</a>
+                        </div>
+                    `;
+                } else {
+                    // Switch to signin form
+                    form.classList.add('login-mode');
+                    form.innerHTML = `
+                        <div class="form-field">
+                            <label for="login-email">E-MAIL</label>
+                            <input type="email" id="login-email" name="email" placeholder="Your e-mail goes here" required />
+                        </div>
+                        <div class="form-field">
+                            <label for="login-password">PASSWORD</label>
+                            <input type="password" id="login-password" name="password" placeholder="••••••••" required />
+                        </div>
+                        <div class="form-actions">
+                            <button type="submit" id="auth-submit-btn">SIGN IN</button>
+                        </div>
+                        <div class="member-link">
+                            <a href="#" id="member-link">Create new account</a>
+                        </div>
+                    `;
+                }
+                
+                // Add fade in effect immediately after content change
+                form.classList.remove('fade-out');
+                form.classList.add('fade-in');
+                
+                // Re-attach event listeners after fade in starts
+                setTimeout(() => {
+                    setupFormToggle();
+                    setupFormSubmission();
+                    
+                    // Setup password strength check if it's signup mode
+                    if (mode === 'signup') {
+                        setupPasswordStrengthCheck();
+                    }
+                    
+                    // Remove fade-in class after animation
+                    setTimeout(() => {
+                        form.classList.remove('fade-in');
+                    }, 400);
+                }, 100);
+                
+            }, 200);
+        }
+
+        // Toggle between signup and login forms (bottom link)
+        function setupFormToggle() {
+            const memberLink = document.getElementById('member-link');
+            const signupForm = document.getElementById('signup-form');
+            
+            if (memberLink && signupForm) {
+                memberLink.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    
+                    // Toggle form content
+                    if (signupForm.classList.contains('login-mode')) {
+                        // Switch to signup
+                        switchToSignup();
+                    } else {
+                        // Switch to login
+                        switchToSignin();
+                    }
+                });
+            }
+        }
+
+        // Setup left side triggers for SIGN UP and SIGN IN
+        function setupLeftSideTriggers() {
+            const signupTrigger = document.querySelector('.signup-trigger');
+            const signinTrigger = document.querySelector('.signin-trigger');
+            
+            console.log('Setting up left side triggers:', { signupTrigger, signinTrigger });
+            
+            if (signupTrigger && signinTrigger) {
+                // SIGN UP trigger
+                signupTrigger.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    console.log('SIGN UP clicked');
+                    switchToSignup();
+                });
+                
+                // SIGN IN trigger
+                signinTrigger.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    console.log('SIGN IN clicked');
+                    switchToSignin();
+                });
+            } else {
+                console.log('Triggers not found - retrying in 500ms');
+                // Retry after a short delay if elements aren't found
+                setTimeout(setupLeftSideTriggers, 500);
+            }
+        }
+
+        // Setup form submission handlers
+        function setupFormSubmission() {
+            const signupForm = document.getElementById('signup-form');
+            
+            if (signupForm) {
+                signupForm.addEventListener('submit', (event) => {
+                    if (signupForm.classList.contains('login-mode')) {
+                        handleLoginSubmit(event);
+                    } else {
+                        handleSignupSubmit(event);
+                    }
+                });
+            }
+        }
+
+        // Initialize when DOM is loaded
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('DOM loaded, setting up...');
+            
+            // Setup all event handlers
+            setupFormToggle();
+            setupFormSubmission();
+            setupPasswordStrengthCheck(); // Setup initial password strength check
+            
+            // Setup left side triggers with a small delay to ensure DOM is ready
+            setTimeout(() => {
+                setupLeftSideTriggers();
+            }, 100);
+        });
+    </script>
+</body>
+</html>
+    </script>
+</body>
+</html>
