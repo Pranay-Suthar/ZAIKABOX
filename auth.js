@@ -1,314 +1,134 @@
-import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
-import { getAuth, onAuthStateChanged, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut, updateProfile } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js';
-import { firebaseConfig, initFirebase } from './firebase-config.js';
+// ================= Firebase Imports and Initialization =================
+import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js';
+import {
+  getAuth,
+  signInWithEmailAndPassword,
+  createUserWithEmailAndPassword,
+} from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js';
 
-// Initialize Firebase
-initFirebase();
+// TODO: Replace with your actual Firebase project configuration
+const firebaseConfig = {
+  apiKey: "AIzaSyBHzADEpSrzJ6yYxPpDi_nmAz3FEkf2kH8",
+  authDomain: "food-recommendation-fea21.firebaseapp.com",
+  projectId: "food-recommendation-fea21",
+  storageBucket: "food-recommendation-fea21.firebasestorage.app",
+  messagingSenderId: "525389055882",
+  appId: "1:525389055882:web:db8e501a63b96ca9db6a73"
+};
 
-// Get auth instance
-const auth = getAuth();
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
 
-// Toast notification system
-function showToast(message, type = 'success', durationMs = 3200) {
-    // Remove existing toast container if it exists
-    let toastContainer = document.querySelector('.toast-container');
-    if (toastContainer) {
-        toastContainer.remove();
+// ================= UI Element References =================
+// Using querySelector('form') to be more robust, as your form may not have an ID
+const authForm = document.querySelector('form');
+const emailInput = document.getElementById('email-field');
+const passwordInput = document.getElementById('password-field');
+const submitButton = document.getElementById('submit-button');
+const formTitle = document.getElementById('form-title');
+const errorMessage = document.getElementById('error-message');
+const toggleContainer = document.getElementById('toggle-auth-mode');
+const toggleAuthModeLink = toggleContainer.querySelector('a');
+
+let isSignUpMode = false;
+
+// ================= UI Toggling Logic =================
+function toggleAuthMode() {
+    isSignUpMode = !isSignUpMode;
+    if (isSignUpMode) {
+        formTitle.textContent = "Create an account";
+        submitButton.textContent = "Sign Up";
+        toggleContainer.firstChild.textContent = "Already have an account? ";
+        toggleAuthModeLink.textContent = "Sign In";
+    } else {
+        formTitle.textContent = "Have an account?";
+        submitButton.textContent = "Sign In";
+        toggleContainer.firstChild.textContent = "Don't have an account? ";
+        toggleAuthModeLink.textContent = "Sign Up";
     }
-
-    // Create toast container
-    toastContainer = document.createElement('div');
-    toastContainer.className = 'toast-container';
-
-    // Create toast
-    const toast = document.createElement('div');
-    toast.className = `toast ${type}`;
-    toast.textContent = message;
-
-    // Add toast to container
-    toastContainer.appendChild(toast);
-    document.body.appendChild(toastContainer);
-
-    // Remove toast after duration
-    setTimeout(() => {
-        if (toastContainer && toastContainer.parentNode) {
-            toastContainer.remove();
-        }
-    }, durationMs);
 }
 
-// Check if user is authenticated
-function requireAuth() {
-    onAuthStateChanged(auth, (user) => {
-        if (user) {
-            // User is signed in
-            console.log('User is authenticated:', user.email);
+if (toggleAuthModeLink) {
+    toggleAuthModeLink.addEventListener('click', (e) => {
+        e.preventDefault();
+        toggleAuthMode();
+    });
+}
+
+// ================= Form Submission Handler =================
+if (authForm) {
+    authForm.addEventListener('submit', (e) => {
+        e.preventDefault(); // Prevent default form submission
+
+        const email = emailInput.value;
+        const password = passwordInput.value;
+        errorMessage.textContent = ''; // Clear previous errors
+
+        if (isSignUpMode) {
+            // --- Handle Sign Up ---
+            createUserWithEmailAndPassword(auth, email, password)
+                .then((userCredential) => {
+                    console.log('Successfully signed up!', userCredential.user);
+                    alert('Account created successfully!');
+                    // Redirect to the index page after successful sign-up
+                    window.location.href = 'index.html';
+                })
+                .catch((error) => {
+                    console.error('Sign Up Error:', error.message);
+                    errorMessage.textContent = error.message;
+                });
+
         } else {
-            // User is signed out, redirect to login
-            if (window.location.pathname !== '/login.html' && !window.location.pathname.includes('login.html')) {
-                window.location.replace('./login.html');
-            }
+            // --- Handle Sign In ---
+            signInWithEmailAndPassword(auth, email, password)
+                .then((userCredential) => {
+                    console.log('Successfully signed in!', userCredential.user);
+                    alert('Welcome back!');
+                    // Redirect to the index page after successful sign-in
+                    window.location.href = 'index.html';
+                })
+                .catch((error) => {
+                    console.error('Sign In Error:', error.message);
+                    errorMessage.textContent = error.message;
+                });
         }
     });
 }
 
-// Wire up logout button
-function wireLogout() {
+// ================= Auth Guard and Logout Logic =================
+import { signOut, onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js';
+
+// The auth variable is already defined in your file
+// const auth = getAuth(app); 
+
+// Listen for authentication state changes
+onAuthStateChanged(auth, (user) => {
     const logoutBtn = document.getElementById('logout-btn');
-    if (logoutBtn) {
-        logoutBtn.addEventListener('click', async () => {
-            try {
-                await signOut(auth);
-                showToast('Logged out successfully!', 'success');
-                setTimeout(() => window.location.replace('./login.html'), 1000);
-            } catch (error) {
-                showToast('Logout failed: ' + error.message, 'error');
-            }
-        });
-    }
-}
+    const userInfo = document.querySelector('.user-info h1');
 
-// Handle signup form submission
-async function handleSignupSubmit(event) {
-    event.preventDefault();
-    
-    const email = document.getElementById('signup-email').value;
-    const password = document.getElementById('signup-password').value;
-    const termsChecked = document.getElementById('terms-checkbox').checked;
-    
-    if (!termsChecked) {
-        showToast('Please agree to the terms of service', 'error');
-        return;
-    }
-    
-    try {
-        const userCredential = await createUserWithEmailAndPassword(auth, email, password);
-        showToast('Account created successfully! Redirecting...', 'success');
-        setTimeout(() => window.location.replace('./index.html'), 1000);
-    } catch (error) {
-        showToast(error.message || 'Signup failed', 'error');
-    }
-}
-
-// Handle login form submission
-async function handleLoginSubmit(event) {
-    event.preventDefault();
-    
-    const email = document.getElementById('login-email').value;
-    const password = document.getElementById('login-password').value;
-    
-    try {
-        await signInWithEmailAndPassword(auth, email, password);
-        showToast('Login successful! Redirecting...', 'success');
-        setTimeout(() => window.location.replace('./index.html'), 1000);
-    } catch (error) {
-        showToast(error.message || 'Login failed', 'error');
-    }
-}
-
-// Toggle between signup and login forms
-function setupFormToggle() {
-    const memberLink = document.getElementById('member-link');
-    const signupForm = document.getElementById('signup-form');
-    
-    if (memberLink && signupForm) {
-        memberLink.addEventListener('click', (e) => {
-            e.preventDefault();
-            
-            // Toggle form content
-            if (signupForm.classList.contains('login-mode')) {
-                // Switch to signup
-                signupForm.classList.remove('login-mode');
-                signupForm.innerHTML = `
-                    <div class="form-field">
-                        <label for="signup-email">E-MAIL</label>
-                        <input type="email" id="signup-email" name="email" placeholder="Your e-mail goes here" required />
-                    </div>
-                    <div class="form-field">
-                        <label for="signup-password">PASSWORD</label>
-                        <input type="password" id="signup-password" name="password" placeholder="••••••••" minlength="6" required />
-                    </div>
-                    <div class="form-field checkbox-field">
-                        <input type="checkbox" id="terms-checkbox" name="terms" required />
-                        <label for="terms-checkbox">
-                            I agree all statements in <a href="#" class="terms-link">terms of service</a>
-                        </label>
-                    </div>
-                    <div class="form-actions">
-                        <button type="submit">SIGN UP</button>
-                    </div>
-                    <div class="member-link">
-                        <a href="#" id="member-link">I'm already member</a>
-                    </div>
-                `;
-                
-                // Re-attach event listeners
-                setupFormToggle();
-                setupFormSubmission();
-            } else {
-                // Switch to login
-                signupForm.classList.add('login-mode');
-                signupForm.innerHTML = `
-                    <div class="form-field">
-                        <label for="login-email">E-MAIL</label>
-                        <input type="email" id="login-email" name="email" placeholder="Your e-mail goes here" required />
-                    </div>
-                    <div class="form-field">
-                        <label for="login-password">PASSWORD</label>
-                        <input type="password" id="login-password" name="password" placeholder="••••••••" required />
-                    </div>
-                    <div class="form-actions">
-                        <button type="submit">SIGN IN</button>
-                    </div>
-                    <div class="member-link">
-                        <a href="#" id="member-link">I'm already member</a>
-                    </div>
-                `;
-                
-                // Re-attach event listeners
-                setupFormToggle();
-                setupFormSubmission();
-            }
-        });
-    }
-}
-
-// Setup left side triggers for SIGN UP and SIGN IN
-function setupLeftSideTriggers() {
-    const signupTrigger = document.querySelector('.signup-trigger');
-    const signinTrigger = document.querySelector('.signin-trigger');
-    const signupForm = document.getElementById('signup-form');
-    
-    if (signupTrigger && signinTrigger && signupForm) {
-        // SIGN UP trigger
-        signupTrigger.addEventListener('click', () => {
-            console.log('SIGN UP clicked'); // Debug log
-            // Update active states
-            signupTrigger.classList.add('active');
-            signinTrigger.classList.remove('active');
-            
-            // Animate form change to signup
-            animateFormChange(signupForm, 'signup');
-        });
-        
-        // SIGN IN trigger
-        signinTrigger.addEventListener('click', () => {
-            console.log('SIGN IN clicked'); // Debug log
-            // Update active states
-            signinTrigger.classList.add('active');
-            signupTrigger.classList.remove('active');
-            
-            // Animate form change to signin
-            animateFormChange(signupForm, 'signin');
-        });
+    if (user) {
+        // User is signed in, show the logout button and user info
+        if (logoutBtn) logoutBtn.style.display = 'block';
+        if (userInfo) userInfo.textContent = `Hello, ${user.email}!`;
     } else {
-        console.log('Triggers not found:', { signupTrigger, signinTrigger, signupForm }); // Debug log
-    }
-}
-
-// Animate form change with smooth transition
-function animateFormChange(form, mode) {
-    console.log('Animating form change to:', mode); // Debug log
-    
-    // Add fade out effect
-    form.classList.add('fade-out');
-    
-    setTimeout(() => {
-        if (mode === 'signup') {
-            // Switch to signup form
-            form.classList.remove('login-mode');
-            form.innerHTML = `
-                <div class="form-field">
-                    <label for="signup-email">E-MAIL</label>
-                    <input type="email" id="signup-email" name="email" placeholder="Your e-mail goes here" required />
-                </div>
-                <div class="form-field">
-                    <label for="signup-password">PASSWORD</label>
-                    <input type="password" id="signup-password" name="password" placeholder="••••••••" minlength="6" required />
-                </div>
-                <div class="form-field checkbox-field">
-                    <input type="checkbox" id="terms-checkbox" name="terms" required />
-                    <label for="terms-checkbox">
-                        I agree all statements in <a href="#" class="terms-link">terms of service</a>
-                    </label>
-                </div>
-                <div class="form-actions">
-                    <button type="submit">SIGN UP</button>
-                </div>
-                <div class="member-link">
-                    <a href="#" id="member-link">I'm already member</a>
-                </div>
-            `;
-        } else {
-            // Switch to signin form
-            form.classList.add('login-mode');
-            form.innerHTML = `
-                <div class="form-field">
-                    <label for="login-email">E-MAIL</label>
-                    <input type="email" id="login-email" name="email" placeholder="Your e-mail goes here" required />
-                </div>
-                <div class="form-field">
-                    <label for="login-password">PASSWORD</label>
-                    <input type="password" id="login-password" name="password" placeholder="••••••••" required />
-                </div>
-                <div class="form-actions">
-                    <button type="submit">SIGN IN</button>
-                </div>
-                <div class="member-link">
-                    <a href="#" id="member-link">I'm already member</a>
-                </div>
-            `;
+        // No user is signed in, redirect to login page
+        if (window.location.pathname.includes('index.html')) {
+            window.location.replace('login.html');
         }
-        
-        // Re-attach event listeners
-        setupFormToggle();
-        setupFormSubmission();
-        
-        // Add fade in effect
-        setTimeout(() => {
-            form.classList.remove('fade-out');
-            form.classList.add('fade-in');
-            
-            // Remove fade-in class after animation
-            setTimeout(() => {
-                form.classList.remove('fade-in');
-            }, 400);
-        }, 50);
-    }, 200);
-}
-
-// Setup form submission handlers
-function setupFormSubmission() {
-    const signupForm = document.getElementById('signup-form');
-    
-    if (signupForm) {
-        signupForm.addEventListener('submit', (event) => {
-            if (signupForm.classList.contains('login-mode')) {
-                handleLoginSubmit(event);
-            } else {
-                handleSignupSubmit(event);
-            }
-        });
     }
-}
+});
 
-// Initialize when DOM is loaded
-document.addEventListener('DOMContentLoaded', function() {
-    console.log('DOM loaded, setting up...'); // Debug log
-    
-    // Check if we're on the login page
-    if (document.body.classList.contains('login-page')) {
-        console.log('On login page, setting up triggers...'); // Debug log
-        
-        // Small delay to ensure everything is rendered
-        setTimeout(() => {
-            setupFormToggle();
-            setupFormSubmission();
-            setupLeftSideTriggers(); // Initialize left side triggers
-        }, 100);
-    } else {
-        // We're on the main page
-        requireAuth();
-        wireLogout();
-    }
-}); 
+// Handle logout button click
+const logoutBtn = document.getElementById('logout-btn');
+if (logoutBtn) {
+    logoutBtn.addEventListener('click', () => {
+        signOut(auth)
+            .then(() => {
+                // Sign-out successful. The onAuthStateChanged listener will handle the redirect.
+                console.log('User signed out.');
+            })
+            .catch((error) => {
+                console.error('Sign Out Error:', error);
+            });
+    });
+}

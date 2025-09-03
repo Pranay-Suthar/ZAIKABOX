@@ -1,58 +1,72 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ZAIKABOX - Sign Up</title>
-    <link rel="stylesheet" href="styles.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Titillium+Web:wght@300;400;600;700&family=Gabarito:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-</head>
-<body class="login-page">
-    <!-- Main Container with Two Columns -->
-    <div class="main-container">
-        <!-- Overlapping Cards Container -->
-        <div class="content-container">
-            <!-- Left Card - Sign Up Splash Screen -->
-            <div class="photo-section">
-                <div class="photo-header">
-                    <h2 class="signup-trigger active">SIGN UP</h2>
-                    <p class="signin-trigger">SIGN IN</p>
+  <head>
+    <title>Login - Zaikabox</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <link href="https://fonts.googleapis.com/css?family=Lato:300,400,700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="login.css">
+    <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js"></script>
+    </head>
+    <body>
+
+    <div id="bg-slideshow-container">
+    	<div id="bg-slideshow-1"></div>
+    	<div id="bg-slideshow-2"></div>
+	</div>
+
+    <section class="ftco-section">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-md-6 text-center mb-5">
+                    <h1 class="heading-section">Zaikabox - Login</h1>
                 </div>
             </div>
+            <div class="row justify-content-center">
+                <div class="col-md-6 col-lg-4">
+                    <div class="login-wrap p-0">
+                <h3 id="form-title" class="mb-4 text-center">Have an account?</h3>
+                <form id="auth-form" action="#" class="signin-form">
+                    <div class="form-group">
+                        <input id="email-field" type="text" class="form-control" placeholder="Email" required>
+                    </div>
+                <div class="form-group">
+                  <input id="password-field" type="password" class="form-control" placeholder="Password" required>
+                  <span toggle="#password-field" class="fa fa-fw fa-eye field-icon toggle-password"></span>
+                </div>
+                <div class="form-group">
+                    <button id="submit-button" type="submit" class="form-control btn btn-primary submit px-3">Sign In</button>
+                </div>
+                <div class="form-group d-md-flex">
+                    <div class="w-50">
+                        <label class="checkbox-wrap checkbox-primary">Remember Me
+                                            <input type="checkbox" checked>
+                                            <span class="checkmark"></span>
+                                          </label>
+                                        </div>
+                                        <div class="w-50 text-md-right">
+                                            <a href="#" style="color: #fff">Forgot Password</a>
+                                        </div>
+                </div>
+              </form>
+              <p id="error-message" class="text-center" style="color: #ff4d4d;"></p>
 
-            <!-- Right Card - Sign Up Form -->
-            <div class="login-section">
-                <section class="login-card">
-                    <!-- Signup Form -->
-                    <form id="signup-form" class="auth-form active">
-                        <div class="form-field">
-                            <label for="signup-email">E-MAIL</label>
-                            <input type="email" id="signup-email" name="email" placeholder="Your e-mail goes here" required />
-                        </div>
-                        <div class="form-field">
-                            <label for="signup-password">PASSWORD</label>
-                            <input type="password" id="signup-password" name="password" placeholder="••••••••" minlength="6" required />
-                        </div>
-                        <div class="form-field checkbox-field">
-                            <input type="checkbox" id="terms-checkbox" name="terms" required />
-                            <label for="terms-checkbox">
-                                I agree all statements in <a href="#" class="terms-link">terms of service</a>
-                            </label>
-                        </div>
-                        <div class="form-actions">
-                            <button type="submit">SIGN UP</button>
-                        </div>
-                        <div class="member-link">
-                            <a href="#" id="member-link">I'm already member</a>
-                        </div>
-                    </form>
-                </section>
+              <p id="toggle-auth-mode" class="w-100 text-center" style="color: white;">Don't have an account? <a href="#" style="color: #fff; font-weight: bold;">Sign Up</a></p>
+
+              <!-- <p class="w-100 text-center">&mdash; Or Sign In With &mdash;</p>
+              <div class="social d-flex text-center">
+                <a href="#" class="px-2 py-2 mr-md-1 rounded"><span class="ion-logo-facebook mr-2"></span> Facebook</a>
+                <a href="#" class="px-2 py-2 ml-md-1 rounded"><span class="ion-logo-twitter mr-2"></span> Twitter</a>
+              </div>-->
+              </div>
+                </div>
             </div>
         </div>
-    </div>
-
-    <script type="module" src="./auth.js"></script>
-    <script src="./photos.js"></script>
-</body>
-</html> 
+    </section>
+    <script type="module" src="auth.js"></script>
+    <script src="slideshow.js"></script>
+    </body>
+</html>

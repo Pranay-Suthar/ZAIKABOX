@@ -5,38 +5,60 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Random Recipes Generator (JavaScript API Project)</title>
 
-    <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Gabarito&family=Titillium+Web&display=swap" rel="stylesheet">
-    <!-- Font Awesome Icons-->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-    <!-- Styles -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA==a" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <link rel="stylesheet" href="https://necolas.github.io/normalize.css/8.0.1/normalize.css">
     <link rel="stylesheet" href="styles.css" />
+    
 </head>
 <body class="flex-column">
+
     <header class="main-header">
-        <h1 id="title">Random Recipes Generator</h1>
-        <p id="description">Data provided by TheMealDB API</p>
-        <!-- Added logout button to manage auth state -->
+        <div class="header-content">
+            <div class="user-info">
+                <h1>Hello, User!</h1>
+            </div>
+            <nav class="social-links">
+                <a href="https://github.com" target="_blank" title="GitHub"><i class="fab fa-github"></i></a>
+                <a href="https://www.linkedin.com" target="_blank" title="LinkedIn"><i class="fab fa-linkedin"></i></a>
+                <a href="https://www.instagram.com" target="_blank" title="Instagram"><i class="fab fa-instagram"></i></a>
+                <a href="https://twitter.com" target="_blank" title="Twitter"><i class="fab fa-twitter"></i></a>
+            </nav>
+        </div>
         <button id="logout-btn" class="auth-btn" title="Logout" aria-label="Logout" style="display:none;">Logout</button>
     </header>
 
     <article class="btn-container flex-row">
-        <button id="random-meal">Get Recipe ✨</button>
+        <button id="random-meal">Get Random Recipe ✨</button>
     </article>
-
-    <section class="meal-container"></section>
-
-    <section class="source-code flex-row">
-        <a href="https://github.com/Pranaysutharnew/random-recipes-generator" target="_blank">
-            <i class="fa-brands fa-github-alt"></i>
-        </a>
+    
+    <section class="filters-container flex-row">
+        <div class="select-wrapper">
+            <label for="area-select">Country:</label>
+            <select id="area-select"></select>
+        </div>
+        <div class="select-wrapper">
+            <label for="category-select">Category:</label>
+            <select id="category-select"></select>
+        </div>
+        <div class="select-wrapper">
+            <label for="veg-nonveg-select">Veg/Non-Veg:</label>
+            <select id="veg-nonveg-select">
+                <option value="all">All</option>
+                <option value="veg">Vegetarian</option>
+                <option value="non-veg">Non-Vegetarian</option>
+            </select>
+        </div>
+        <button id="search-btn">Search</button>
     </section>
 
-    <!-- Firebase Auth (module) -->
-    <script type="module" src="./auth.js"></script>
-    <script src="./app.js"></script>
+    <section class="meal-container">
+        </section>
+    
+    <script type="module" src="auth.js"></script>
+    <script type="module" src="./app.js"></script>
+
 </body>
 </html>
