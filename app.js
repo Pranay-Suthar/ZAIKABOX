@@ -1,495 +1,288 @@
-// Wrap all your code in a DOMContentLoaded listener
-document.addEventListener('DOMContentLoaded', () => {
+        document.addEventListener('DOMContentLoaded', () => {
+            // --- DOM Elements ---
+            const sliderContainer = document.querySelector('.meal-slider-container');
+            const mealGrid = document.querySelector('.meal-grid');
+            const randomMealContainer = document.querySelector('.random-meal-container');
+            const toastLoader = document.getElementById('toast-loader');
+            const recipeModal = document.getElementById('recipe-modal');
+            const modalContent = document.getElementById('modal-content');
+            const searchTypeSelect = document.getElementById('search-type');
+            const searchValueSelect = document.getElementById('search-value');
+            const searchValueContainer = document.getElementById('filter-value-container');
+            const randomMealBtn = document.getElementById('single-random-meal');
 
-    const randomMealBtn = document.querySelector('#random-meal');
-    const searchBtn = document.querySelector('#search-btn');
-    const mealContainer = document.querySelector('.meal-container');
-    const areaSelect = document.querySelector('#area-select');
-    const categorySelect = document.querySelector('#category-select');
-    const vegNonvegSelect = document.querySelector('#veg-nonveg-select');
-    let lastSearchQuery = ''; // Store the last search query
-    let currentSearchResults = []; // Store current search results for back navigation
+            // --- State ---
+            const API_BASE_URL = 'https://www.themealdb.com/api/json/v1/1/';
+            let slideInterval = null;
 
-    // --- Veg/Non-veg Category Mapping ---
-    const vegetarianCategories = [
-        'Vegetarian', 'Vegan', 'Side', 'Dessert', 'Breakfast'
-    ];
-    
-    const nonVegetarianCategories = [
-        'Beef', 'Chicken', 'Pork', 'Seafood', 'Goat', 'Lamb'
-    ];
+            // --- Functions ---
 
-    // --- Initial Fetch Functions to Populate Filters ---
-    async function fetchAreas() {
-        try {
-            const response = await fetch('https://www.themealdb.com/api/json/v1/1/list.php?a=list');
-            const data = await response.json();
-            populateDropdown(areaSelect, data.meals, 'strArea', 'Country');
-        } catch (error) {
-            console.error('Error fetching areas:', error);
-        }
-    }
+            /**
+             * Shows or hides the loading indicator.
+             * @param {boolean} show - True to show, false to hide.
+             */
+            const toggleLoader = (show) => {
+                toastLoader.classList.toggle('show', show);
+            };
 
-    async function fetchCategories() {
-        try {
-            const response = await fetch('https://www.themealdb.com/api/json/v1/1/list.php?c=list');
-            const data = await response.json();
-            populateDropdown(categorySelect, data.meals, 'strCategory', 'Category');
-        } catch (error) {
-            console.error('Error fetching categories:', error);
-        }
-    }
-    
-    function populateDropdown(selectElement, items, key, defaultLabel) {
-        selectElement.innerHTML = `<option value="">-- Select ${defaultLabel} --</option>`;
-        items.forEach(item => {
-            const option = document.createElement('option');
-            option.value = item[key];
-            option.textContent = item[key];
-            selectElement.appendChild(option);
-        });
-    }
+            /**
+             * Starts the automatic circular scrolling for the slider.
+             */
+            const startSliderAnimation = () => {
+                stopSliderAnimation(); // Ensure no multiple intervals are running
+                slideInterval = setInterval(() => {
+                    // Check if we've scrolled past the first set of items
+                    if (sliderContainer.scrollLeft >= sliderContainer.scrollWidth / 2) {
+                        sliderContainer.scrollLeft = 0; // Silently jump to the beginning
+                    } else {
+                        sliderContainer.scrollLeft += 1; // Scroll smoothly
+                    }
+                }, 30); // Adjust for scroll speed
+            };
 
-    // --- Helper function to check if a meal is vegetarian ---
-    function isVegetarian(meal) {
-        const nonVegKeywords = ['chicken', 'beef', 'pork', 'lamb', 'fish', 'salmon', 'tuna', 'prawns', 'bacon', 'ham', 'turkey', 'duck', 'meat'];
-        const mealName = meal.strMeal.toLowerCase();
-        const category = meal.strCategory ? meal.strCategory.toLowerCase() : '';
-        
-        return !nonVegKeywords.some(keyword => 
-            mealName.includes(keyword) || category.includes(keyword)
-        );
-    }
-
-    // --- Search & Display Logic ---
-    async function searchMeals(query) {
-        // Show loading state
-        mealContainer.innerHTML = '<div class="loading"></div>';
-        
-        try {
-            const response = await fetch(query);
-            const data = await response.json();
+            /**
+             * Stops the automatic slider scrolling.
+             */
+            const stopSliderAnimation = () => {
+                clearInterval(slideInterval);
+            };
             
-            if (data.meals) {
-                lastSearchQuery = query;
-                let meals = data.meals;
-                
-                // Apply vegetarian/non-vegetarian filter if needed
-                const vegNonveg = vegNonvegSelect.value;
-                if (vegNonveg === 'veg') {
-                    meals = meals.filter(meal => isVegetarian(meal));
-                } else if (vegNonveg === 'non-veg') {
-                    meals = meals.filter(meal => !isVegetarian(meal));
-                }
-                
-                // Limit to 16 meals for 4x4 grid
-                meals = meals.slice(0, 16);
-                currentSearchResults = meals;
-                
-                displaySearchResults(meals);
-            } else {
-                mealContainer.innerHTML = `
-                    <div class="no-results">
-                        <h2>No recipes found</h2>
-                        <p>Try adjusting your search filters</p>
+            /**
+             * Creates a meal card element.
+             * @param {object} meal - The meal object from the API.
+             * @returns {HTMLElement} The created meal card element.
+             */
+            const createMealCard = (meal) => {
+                const mealCard = document.createElement('div');
+                mealCard.className = 'meal-card';
+                mealCard.dataset.mealId = meal.idMeal;
+                mealCard.innerHTML = `
+                    <img src="${meal.strMealThumb}" alt="${meal.strMeal}" class="meal-card-background">
+                    <div class="meal-card-overlay">
+                        <div class="meal-card-info">
+                            <h3 class="meal-card-title">${meal.strMeal}</h3>
+                            <span class="meal-card-cta">View Recipe</span>
+                        </div>
                     </div>
                 `;
-            }
-        } catch (error) {
-            console.error('Error searching meals:', error);
-            mealContainer.innerHTML = `
-                <div class="error-message">
-                    <h2>Oops! Something went wrong</h2>
-                    <p>Please try again later</p>
-                </div>
-            `;
-        }
-    }
+                mealCard.addEventListener('click', () => fetchAndShowRecipeDetails(meal.idMeal));
+                return mealCard;
+            };
 
-    // --- Function to display search results in 4x4 grid ---
-    function displaySearchResults(meals) {
-        if (!meals || meals.length === 0) {
-            mealContainer.innerHTML = `
-                <div class="no-results">
-                    <h2>No recipes found</h2>
-                    <p>Try adjusting your search filters</p>
-                </div>
-            `;
-            return;
-        }
+            /**
+             * Displays recipes in the slider container, duplicating for infinite scroll.
+             * @param {Array} meals - An array of meal objects.
+             */
+            const displayRecipesInSlider = (meals) => {
+                sliderContainer.innerHTML = '';
+                const fragment = document.createDocumentFragment();
+                meals.forEach(meal => {
+                    fragment.appendChild(createMealCard(meal));
+                });
+                // Append original and cloned set for seamless loop
+                sliderContainer.appendChild(fragment);
+                sliderContainer.appendChild(fragment.cloneNode(true));
+            };
+            
+            /**
+             * Displays recipes in the grid container for search results.
+             * @param {Array} meals - An array of meal objects.
+             */
+            const displayRecipesInGrid = (meals) => {
+                mealGrid.innerHTML = '';
+                 if (!meals) {
+                    mealGrid.innerHTML = '<p class="error-message">No recipes found for your selection.</p>';
+                    return;
+                }
+                meals.forEach(meal => {
+                    mealGrid.appendChild(createMealCard(meal));
+                });
+            };
 
-        // Create grid container with search results
-        mealContainer.innerHTML = `
-            <div class="search-results">
-                ${meals.map(meal => createMealCard(meal)).join('')}
-            </div>
-            <div class="btn-container" style="margin-top: 30px;">
-                <button id="suggest-more-btn" class="suggest-more-btn">Suggest More</button>
-            </div>
-        `;
+            /**
+             * Fetches an initial list of recipes to populate the slider.
+             */
+            const fetchInitialRecipes = async () => {
+                toggleLoader(true);
+                try {
+                    const response = await fetch(`${API_BASE_URL}search.php?f=a`);
+                    const data = await response.json();
+                    if (data.meals) {
+                        displayRecipesInSlider(data.meals);
+                        startSliderAnimation();
+                    } else {
+                        sliderContainer.innerHTML = '<p class="error-message">Could not find any recipes.</p>';
+                    }
+                } catch (error) {
+                    console.error('Error fetching initial recipes:', error);
+                    sliderContainer.innerHTML = '<p class="error-message">Failed to load recipes.</p>';
+                } finally {
+                    toggleLoader(false);
+                }
+            };
+            
+            /**
+             * Fetches detailed information for a specific meal and displays the modal.
+             * @param {string} mealId - The ID of the meal to look up.
+             */
+            const fetchAndShowRecipeDetails = async (mealId) => {
+                toggleLoader(true);
+                try {
+                    const response = await fetch(`${API_BASE_URL}lookup.php?i=${mealId}`);
+                    const data = await response.json();
+                    if (data.meals && data.meals[0]) {
+                        displayRecipeModal(data.meals[0]);
+                    } else {
+                        alert('Could not retrieve recipe details.');
+                    }
+                } catch (error) {
+                    console.error('Error fetching recipe details:', error);
+                    alert('Failed to load recipe details.');
+                } finally {
+                    toggleLoader(false);
+                }
+            };
 
-        // Add click event listeners to meal cards
-        const mealCards = mealContainer.querySelectorAll('.meal-card');
-        mealCards.forEach((card, index) => {
-            card.addEventListener('click', () => fetchMealDetails(meals[index].idMeal));
-        });
+            /**
+             * Populates and shows the recipe detail modal.
+             * @param {object} meal - The detailed meal object from the API.
+             */
+            const displayRecipeModal = (meal) => {
+                const ingredients = [];
+                for (let i = 1; i <= 20; i++) {
+                    const ingredient = meal[`strIngredient${i}`];
+                    const measure = meal[`strMeasure${i}`];
+                    if (ingredient && ingredient.trim() !== '') {
+                        ingredients.push({ name: ingredient, amount: measure });
+                    } else {
+                        break;
+                    }
+                }
+                const ingredientsHtml = ingredients.map(ing => `<li><span class="ingredient-name">${ing.name}</span><span class="ingredient-amount">${ing.amount}</span></li>`).join('');
+                modalContent.innerHTML = `
+                    <button class="close-modal-btn" id="close-modal-btn">&times;</button>
+                    <div class="recipe-primary-content">
+                        <img src="${meal.strMealThumb}" alt="${meal.strMeal}" class="recipe-image">
+                        <div class="recipe-tags">
+                            ${meal.strCategory ? `<span>${meal.strCategory}</span>` : ''}
+                            ${meal.strArea ? `<span>${meal.strArea}</span>` : ''}
+                        </div>
+                        ${meal.strYoutube ? `<a href="${meal.strYoutube}" target="_blank" class="recipe-video-btn"><i class="fab fa-youtube"></i> Watch Video</a>` : ''}
+                    </div>
+                    <div class="recipe-secondary-content">
+                        <h2 class="recipe-title">${meal.strMeal}</h2>
+                        <h3 class="recipe-section-title">Ingredients</h3>
+                        <ul class="recipe-ingredients-list">${ingredientsHtml}</ul>
+                        <h3 class="recipe-section-title">Instructions</h3>
+                        <p class="recipe-instructions-text">${meal.strInstructions}</p>
+                    </div>`;
+                recipeModal.classList.add('show');
+                document.body.style.overflow = 'hidden';
+                document.getElementById('close-modal-btn').addEventListener('click', closeModal);
+            };
+            
+            const closeModal = () => {
+                recipeModal.classList.remove('show');
+                document.body.style.overflow = 'auto';
+            };
 
-        // Add event listener to suggest more button
-        const suggestMoreBtn = document.getElementById('suggest-more-btn');
-        if (suggestMoreBtn) {
-            suggestMoreBtn.addEventListener('click', () => {
-                if (lastSearchQuery) {
-                    searchMeals(lastSearchQuery);
+            const fetchAndPopulateFilterOptions = async (type) => {
+                toggleLoader(true);
+                try {
+                    const response = await fetch(`${API_BASE_URL}list.php?${type}=list`);
+                    const data = await response.json();
+                    searchValueSelect.innerHTML = `<option value="">Select a value...</option>`; // Reset
+                    
+                    let options;
+                    if (type === 'c') options = data.meals.map(item => item.strCategory);
+                    if (type === 'a') options = data.meals.map(item => item.strArea);
+                    if (type === 'i') options = data.meals.map(item => item.strIngredient);
+
+                    options.sort().forEach(optionValue => {
+                        const option = document.createElement('option');
+                        option.value = optionValue;
+                        option.textContent = optionValue;
+                        searchValueSelect.appendChild(option);
+                    });
+                    searchValueContainer.classList.remove('hidden');
+                } catch (error) {
+                    console.error('Error fetching filter options:', error);
+                } finally {
+                    toggleLoader(false);
+                }
+            };
+            
+            const handleSearch = async (type, value) => {
+                stopSliderAnimation();
+                sliderContainer.classList.add('hidden');
+                randomMealContainer.classList.add('hidden');
+                mealGrid.classList.remove('hidden');
+                toggleLoader(true);
+                try {
+                    const response = await fetch(`${API_BASE_URL}filter.php?${type}=${value}`);
+                    const data = await response.json();
+                    displayRecipesInGrid(data.meals);
+                } catch (error) {
+                    console.error('Error fetching search results:', error);
+                    mealGrid.innerHTML = '<p class="error-message">Failed to load search results.</p>';
+                } finally {
+                    toggleLoader(false);
+                }
+            };
+
+            const handleRandomMeal = async () => {
+                stopSliderAnimation();
+                sliderContainer.classList.add('hidden');
+                mealGrid.classList.add('hidden');
+                randomMealContainer.classList.remove('hidden');
+                randomMealContainer.innerHTML = ''; // Clear previous
+                toggleLoader(true);
+                try {
+                    const response = await fetch(`${API_BASE_URL}random.php`);
+                    const data = await response.json();
+                    if (data.meals && data.meals[0]) {
+                        randomMealContainer.appendChild(createMealCard(data.meals[0]));
+                    }
+                } catch(error) {
+                    console.error('Error fetching random meal:', error);
+                    randomMealContainer.innerHTML = '<p class="error-message">Failed to load a random meal.</p>';
+                } finally {
+                    toggleLoader(false);
+                }
+            };
+            
+            // --- Event Listeners ---
+            searchTypeSelect.addEventListener('change', (e) => {
+                const type = e.target.value;
+                if (type) {
+                    fetchAndPopulateFilterOptions(type);
+                } else {
+                    // Reset to slider view
+                    mealGrid.classList.add('hidden');
+                    randomMealContainer.classList.add('hidden');
+                    sliderContainer.classList.remove('hidden');
+                    startSliderAnimation();
+                    searchValueContainer.classList.add('hidden');
                 }
             });
-        }
-    }
 
-    // --- Function to create individual meal card ---
-    function createMealCard(meal) {
-        return `
-            <div class="meal-card">
-                <div class="meal-card-image">
-                    <img src="${meal.strMealThumb}" alt="${meal.strMeal}" loading="lazy">
-                    ${meal.strCategory ? `<div class="meal-card-category">${meal.strCategory}</div>` : ''}
-                </div>
-                <div class="meal-card-content">
-                    <h3>${meal.strMeal}</h3>
-                </div>
-            </div>
-        `;
-    }
-
-    // --- Function to handle multiple random meals for better grid display ---
-    async function getMultipleRandomMeals(count = 16) {
-        const promises = [];
-        for (let i = 0; i < count; i++) {
-            promises.push(fetch('https://www.themealdb.com/api/json/v1/1/random.php'));
-        }
-        
-        try {
-            const responses = await Promise.all(promises);
-            const dataPromises = responses.map(res => res.json());
-            const results = await Promise.all(dataPromises);
-            const meals = results.map(result => result.meals[0]).filter(meal => meal);
-            
-            currentSearchResults = meals;
-            displaySearchResults(meals);
-        } catch (error) {
-            console.error('Error fetching random meals:', error);
-            // Fallback to single random meal
-            searchMeals('https://www.themealdb.com/api/json/v1/1/random.php');
-        }
-    }
-
-    async function fetchMealDetails(id) {
-        mealContainer.innerHTML = '<div class="loading"></div>';
-        
-        try {
-            const response = await fetch(`https://www.themealdb.com/api/json/v1/1/lookup.php?i=${id}`);
-            const data = await response.json();
-            if (data.meals) {
-                createMeal(data.meals[0]);
-            }
-        } catch (error) {
-            console.error('Error fetching meal details:', error);
-            mealContainer.innerHTML = `
-                <div class="error-message">
-                    <h2>Error loading recipe</h2>
-                    <p>Please try again</p>
-                </div>
-            `;
-        }
-    }
-
-    // --- Function to show search results (back navigation) ---
-    function showSearchResults() {
-        if (currentSearchResults.length > 0) {
-            displaySearchResults(currentSearchResults);
-        } else {
-            getMultipleRandomMeals();
-        }
-    }
-
-    const getIngredients = (meal, num = 1) => {
-        return meal[`strIngredient${num}`]
-            ? [{
-                'name': meal[`strIngredient${num}`],
-                'amount': meal[`strMeasure${num}`]
-            }].concat(getIngredients(meal, num + 1)) : '';
-    };
-
-    const createMeal = (meal) => {
-        const ingredients = getIngredients(meal).slice(0, -1);
-
-        // Split instructions into steps for better formatting
-        const instructionSteps = meal.strInstructions
-            .split(/\d+\.|\n/)
-            .filter(step => step.trim())
-            .map(step => step.trim());
-
-        mealContainer.innerHTML = `
-            <h2 id="meal-title">${meal.strMeal}</h2>
-            <div class="meal-content">
-                <div class="primary">
-                    <div class="thumbnail-container">
-                        <img src="${meal.strMealThumb}" alt="${meal.strMeal}">
-                    </div>
-                    
-                    <div class="ingredients">
-                        <h3 id="ingredient-title">Ingredients</h3>
-                        <ol>
-                            ${ingredients.map(ingredient => `
-                                <li>
-                                    <p>
-                                        <span>${ingredient.name}</span>
-                                        <span class="amount">${ingredient.amount}</span>
-                                    </p>
-                                </li>
-                            `).join('')}
-                        </ol>
-                    </div>
-
-                    <div class="tags">
-                        ${meal.strCategory ? `<div>${meal.strCategory}</div>` : ''}
-                        ${meal.strArea ? `<div>${meal.strArea}</div>` : ''}
-                        ${meal.strTags ? meal.strTags.split(',').map(tag => `<div>${tag.trim()}</div>`).join('') : ''}
-                    </div>
-
-                    ${meal.strYoutube ? `<button id="watch-video" onclick="displayVideo('${meal.strYoutube.split('v=')[1]}')">Watch Video 📺</button>` : ''}
-                    
-                    <button onclick="showSearchResults()" class="back-btn">← Back to Search Results</button>
-                </div>
-                
-                <div class="secondary">
-                    <h3 id="instruction-title">Instructions</h3>
-                    <div class="instructions">
-                        <ul>
-                            ${instructionSteps.map(step => `<li class="steps">${step}</li>`).join('')}
-                        </ul>
-                    </div>
-                </div>
-            </div>
-        `;
-
-        document.body.classList.remove('flex-column');
-    };
-
-    window.displayVideo = (videoId) => {
-        const [videoContainer, iframe, btn] = ['section', 'iframe', 'button'].map(elem => document.createElement(elem));
-
-        videoContainer.classList.add('video-container', 'flex-row');
-        videoContainer.addEventListener('click', () => videoContainer.remove());
-
-        iframe.setAttribute('src', `https://www.youtube.com/embed/${videoId}`);
-        iframe.setAttribute('allowfullscreen', '');
-
-        btn.setAttribute('id', 'remove-video');
-        btn.innerHTML = `<i class="fa-solid fa-xmark"></i>`;
-        btn.addEventListener('click', () => videoContainer.remove());
-
-        [iframe, btn].forEach(elem => videoContainer.appendChild(elem));
-
-        document.body.appendChild(videoContainer);
-    };
-
-    // --- Function to show welcome message ---
-    function showWelcomeMessage() {
-        mealContainer.innerHTML = `
-            <div class="welcome-message">
-                <h2>Welcome to Recipe Finder!</h2>
-                <p>Use the "Get Random Recipe ✨" button to discover a delicious recipe, or use the search filters to find specific cuisines and categories.</p>
-                <div class="welcome-actions">
-                    <button onclick="document.getElementById('random-meal').click()" class="welcome-btn">🎲 Get Random Recipe</button>
-                    <button onclick="getMultipleRandomMeals()" class="welcome-btn">🔍 Browse Recipes</button>
-                </div>
-            </div>
-        `;
-    }
-
-    // Make functions globally available
-    window.showSearchResults = showSearchResults;
-    window.showWelcomeMessage = showWelcomeMessage;
-
-    // --- Event Listeners ---
-    if (randomMealBtn) {
-        randomMealBtn.addEventListener('click', () => {
-            getMultipleRandomMeals();
-        });
-    }
-
-    if (searchBtn) {
-        searchBtn.addEventListener('click', () => {
-            const area = areaSelect.value;
-            const category = categorySelect.value;
-            const vegNonveg = vegNonvegSelect.value;
-            let query = '';
-
-            if (area) {
-                query = `https://www.themealdb.com/api/json/v1/1/filter.php?a=${area}`;
-            } else if (category) {
-                query = `https://www.themealdb.com/api/json/v1/1/filter.php?c=${category}`;
-            } else if (vegNonveg === 'veg') {
-                // Fetch from multiple vegetarian categories and combine
-                const vegCategory = vegetarianCategories[Math.floor(Math.random() * vegetarianCategories.length)];
-                query = `https://www.themealdb.com/api/json/v1/1/filter.php?c=${vegCategory}`;
-            } else if (vegNonveg === 'non-veg') {
-                // Fetch from multiple non-vegetarian categories and combine
-                const nonVegCategory = nonVegetarianCategories[Math.floor(Math.random() * nonVegetarianCategories.length)];
-                query = `https://www.themealdb.com/api/json/v1/1/filter.php?c=${nonVegCategory}`;
-            } else {
-                // Default to multiple random meals for better grid display
-                getMultipleRandomMeals();
-                return;
-            }
-
-            searchMeals(query);
-        });
-    }
-
-    // --- Toast Notification System ---
-    function showToast(message, type = 'info') {
-        const toastContainer = document.querySelector('.toast-container') || createToastContainer();
-        
-        const toast = document.createElement('div');
-        toast.className = `toast ${type}`;
-        toast.textContent = message;
-        
-        toastContainer.appendChild(toast);
-        
-        setTimeout(() => {
-            if (toast.parentNode) {
-                toast.parentNode.removeChild(toast);
-            }
-        }, 4000);
-    }
-
-    function createToastContainer() {
-        const container = document.createElement('div');
-        container.className = 'toast-container';
-        document.body.appendChild(container);
-        return container;
-    }
-
-    // --- Navbar Functionality ---
-    function initializeNavbar() {
-        const logoutBtn = document.getElementById('logout-btn');
-        const socialLinks = document.querySelectorAll('.social-links a');
-        
-        // Show logout button (you can conditionally show this based on user authentication)
-        if (logoutBtn) {
-            logoutBtn.style.display = 'block';
-            logoutBtn.addEventListener('click', handleLogout);
-        }
-        
-        // Add click tracking for social links (optional)
-        socialLinks.forEach(link => {
-            link.addEventListener('click', (e) => {
-                const platform = e.target.closest('a').title;
-                console.log(`Navigating to ${platform}`);
-                // You can add analytics tracking here if needed
-            });
-        });
-        
-        // Add tooltip effects for social links
-        socialLinks.forEach(link => {
-            link.addEventListener('mouseenter', () => {
-                const title = link.getAttribute('title');
-                if (title) {
-                    showTooltip(link, title);
+            searchValueSelect.addEventListener('change', (e) => {
+                const type = searchTypeSelect.value;
+                const value = e.target.value;
+                if (value) {
+                    handleSearch(type, value);
                 }
             });
-            
-            link.addEventListener('mouseleave', () => {
-                hideTooltip();
-            });
-        });
-    }
-    
-    function handleLogout() {
-        // Show confirmation dialog
-        if (confirm('Are you sure you want to logout?')) {
-            showToast('Logging out...', 'info');
-            
-            // Simulate logout process
-            setTimeout(() => {
-                // Clear any stored user data
-                localStorage.removeItem('user');
-                sessionStorage.clear();
-                
-                // Reset the application state
-                resetApplicationState();
-                
-                // Show success message
-                showToast('Successfully logged out!', 'success');
-                
-                // Optional: Redirect to login page or refresh
-                // window.location.href = 'login.html';
-                // window.location.reload();
-            }, 1000);
-        }
-    }
-    
-    function resetApplicationState() {
-        // Clear search results
-        currentSearchResults = [];
-        lastSearchQuery = '';
-        
-        // Reset dropdown selections
-        if (areaSelect) areaSelect.value = '';
-        if (categorySelect) categorySelect.value = '';
-        if (vegNonvegSelect) vegNonvegSelect.value = 'all';
-        
-        // Clear meal container
-        mealContainer.innerHTML = `
-            <div class="welcome-message">
-                <h2>Welcome to Recipe Finder!</h2>
-                <p>Use the "Get Random Recipe" button or search filters to discover delicious recipes.</p>
-            </div>
-        `;
-        
-        // Update user greeting
-        const userInfo = document.querySelector('.user-info h1');
-        if (userInfo) {
-            userInfo.textContent = 'Hello, Guest!';
-        }
-    }
-    
-    // Simple tooltip system for social links
-    function showTooltip(element, text) {
-        const tooltip = document.createElement('div');
-        tooltip.className = 'tooltip';
-        tooltip.textContent = text;
-        tooltip.style.cssText = `
-            position: absolute;
-            background: rgba(0,0,0,0.8);
-            color: white;
-            padding: 5px 10px;
-            border-radius: 4px;
-            font-size: 0.8rem;
-            z-index: 10000;
-            pointer-events: none;
-            white-space: nowrap;
-        `;
-        
-        document.body.appendChild(tooltip);
-        
-        const rect = element.getBoundingClientRect();
-        tooltip.style.left = (rect.left + rect.width/2 - tooltip.offsetWidth/2) + 'px';
-        tooltip.style.top = (rect.bottom + 5) + 'px';
-    }
-    
-    function hideTooltip() {
-        const tooltip = document.querySelector('.tooltip');
-        if (tooltip) {
-            tooltip.remove();
-        }
-    }
-    
-    // --- Initialize navbar when DOM loads ---
-    initializeNavbar();
 
-    // Run initial data fetching
-    fetchAreas();
-    fetchCategories();
-});
+            sliderContainer.addEventListener('mouseenter', stopSliderAnimation);
+            sliderContainer.addEventListener('mouseleave', startSliderAnimation);
+
+            randomMealBtn.addEventListener('click', handleRandomMeal);
+            recipeModal.addEventListener('click', (e) => e.target === recipeModal && closeModal());
+            document.addEventListener('keydown', (e) => e.key === 'Escape' && recipeModal.classList.contains('show') && closeModal());
+
+            // --- Initial Load ---
+            fetchInitialRecipes();
+        });
+
+        

@@ -3,62 +3,82 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Random Recipes Generator (JavaScript API Project)</title>
+    <title>ZAIKABOX - Recipe Slider</title>
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Gabarito&family=Titillium+Web&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA==a" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" />
     <link rel="stylesheet" href="https://necolas.github.io/normalize.css/8.0.1/normalize.css">
     <link rel="stylesheet" href="styles.css" />
-    
 </head>
-<body class="flex-column">
 
+<body class="flex-column">
     <header class="main-header">
         <div class="header-content">
             <div class="user-info">
-                <h1>Hello, User!</h1>
+                <h1>ZAIKABOX</h1>
             </div>
             <nav class="social-links">
-                <a href="https://github.com" target="_blank" title="GitHub"><i class="fab fa-github"></i></a>
-                <a href="https://www.linkedin.com" target="_blank" title="LinkedIn"><i class="fab fa-linkedin"></i></a>
-                <a href="https://www.instagram.com" target="_blank" title="Instagram"><i class="fab fa-instagram"></i></a>
-                <a href="https://twitter.com" target="_blank" title="Twitter"><i class="fab fa-twitter"></i></a>
+                <a href="https://github.com/" target="_blank" title="GitHub"><i class="fa-brands fa-github"></i></a>
+                <a href="https://linkedin.com/" target="_blank" title="LinkedIn"><i class="fa-brands fa-linkedin"></i></a>
+                <a href="https://twitter.com/" target="_blank" title="Twitter"><i class="fa-brands fa-twitter"></i></a>
             </nav>
+            <button id="logout-btn" title="Logout" aria-label="Logout">Logout</button>
         </div>
-        <button id="logout-btn" class="auth-btn" title="Logout" aria-label="Logout" style="display:none;">Logout</button>
     </header>
 
-    <article class="btn-container flex-row">
-        <button id="random-meal">Get Random Recipe ✨</button>
-    </article>
-    
-    <section class="filters-container flex-row">
-        <div class="select-wrapper">
-            <label for="area-select">Country:</label>
-            <select id="area-select"></select>
+    <section class="search-container">
+        <div class="search-content">
+            <button id="single-random-meal">Generate Random Recipe</button>
+            <div class="filter-step">
+                <select id="search-type">
+                    <option value="">Filter by Type...</option>
+                    <option value="c">Category</option>
+                    <option value="a">Area</option>
+                    <option value="i">Ingredient</option>
+                </select>
+            </div>
+            <div id="filter-value-container" class="filter-step hidden">
+                <select id="search-value">
+                    <!-- Options will be dynamically populated -->
+                </select>
+            </div>
         </div>
-        <div class="select-wrapper">
-            <label for="category-select">Category:</label>
-            <select id="category-select"></select>
-        </div>
-        <div class="select-wrapper">
-            <label for="veg-nonveg-select">Veg/Non-Veg:</label>
-            <select id="veg-nonveg-select">
-                <option value="all">All</option>
-                <option value="veg">Vegetarian</option>
-                <option value="non-veg">Non-Vegetarian</option>
-            </select>
-        </div>
-        <button id="search-btn">Search</button>
     </section>
 
-    <section class="meal-container">
-        </section>
+    <main class="main-content">
+        <div class="meal-slider-container">
+            <!-- Meal cards for the slider will be inserted here by JavaScript -->
+        </div>
+        <div class="meal-grid hidden">
+            <!-- Meal cards for search results will be inserted here by JavaScript -->
+        </div>
+        <div class="random-meal-container hidden">
+            <!-- Random meal card will be inserted here -->
+        </div>
+        <div id="toast-loader">
+            <div class="spinner"></div>
+            <span>Loading recipes...</span>
+        </div>
+    </main>
     
-    <script type="module" src="auth.js"></script>
-    <script type="module" src="./app.js"></script>
+    <!-- Recipe Modal structure -->
+    <div class="recipe-modal" id="recipe-modal">
+      <div class="modal-content" id="modal-content">
+          <!-- Recipe details will be injected here by JavaScript -->
+      </div>
+    </div>
 
+
+    <footer class="main-footer">
+        <section class="source-code">
+            <a href="https://github.com/Pranaysutharnew/random-recipes-generator" target="_blank">
+                <i class="fa-brands fa-github-alt"></i>
+            </a>
+        </section>
+        <p>&copy; 2024 Zaikabox</p>
+    </footer>
+    <script type="module" src="app.js"></script>
 </body>
 </html>

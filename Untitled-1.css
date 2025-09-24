@@ -614,17 +614,78 @@ body {
     transform: translateY(-3px);
     box-shadow: var(--shadow-lg);
 }
+/* 
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ZAIKABOX</title>
 
-/* --- New Slider Container --- */
-.meal-slider-container {
-    display: flex; 
-    gap: 32px; 
-    padding: 0 32px;
-    overflow-x: auto;
-    scroll-snap-type: x mandatory; 
-    -webkit-overflow-scrolling: touch; 
-    margin: 20px auto;
-    width: 100%;
-    max-width: 1400px;
-}
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Gabarito&family=Titillium+Web&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" />
+    <link rel="stylesheet" href="https://necolas.github.io/normalize.css/8.0.1/normalize.css">
+    <link rel="stylesheet" href="styles.css" />
+    
+</head>
+<body class="flex-column">
+    <header class="main-header">
+        <div class="header-content">
+            <div class="user-info">
+                <h1>ZAIKABOX</h1>
+            </div>
+            <nav class="social-links">
+                <a href="https://github.com/" target="_blank" title="GitHub"><i class="fa-brands fa-github"></i></a>
+                <a href="https://linkedin.com/" target="_blank" title="LinkedIn"><i class="fa-brands fa-linkedin"></i></a>
+                <a href="https://twitter.com/" target="_blank" title="Twitter"><i class="fa-brands fa-twitter"></i></a>
+            </nav>
+            <button id="logout-btn" title="Logout" aria-label="Logout">Logout</button>
+        </div>
+    </header>
 
+    <section class="search-container">
+        <div class="search-content">
+            <button id="single-random-meal">Generate Random Recipe</button>
+            <div class="filter-step">
+                <select id="search-type">
+                    <option value="">Filter by Type...</option>
+                    <option value="c">Category</option>
+                    <option value="a">Country</option>
+                    <option value="i">Ingredient</option>
+                </select>
+            </div>
+            <div id="filter-value-container" class="filter-step hidden">
+                <select id="search-value">
+                    <!-- Options will be dynamically populated by app.js -->
+                </select>
+            </div>
+        </div>
+    </section>
+
+    <main class="main-content">
+        <div id="toast-loader">
+            <div class="spinner"></div>
+            <span>Loading recipes...</span>
+        </div>
+
+        <div class="meal-grid">
+            <!-- Meal cards will be inserted here by app.js -->
+        </div>
+    </main>
+
+    <footer class="main-footer">
+        <section class="source-code">
+            <a href="https://github.com/Pranaysutharnew/random-recipes-generator" target="_blank">
+                <i class="fa-brands fa-github-alt"></i>
+            </a>
+        </section>
+        <p>&copy; 2024 Zaikabox</p>
+    </footer>
+    
+    <script type="module" src="auth.js"></script>
+    <script type="module" src="./app.js"></script>
+</body>
+</html>
+ */
