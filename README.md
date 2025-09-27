@@ -55,7 +55,7 @@ A dedicated **Cookbook page** (`cookbook.html`) where users can view and manage 
 
 ## 📸 Screenshots  
 
-_(Add a few screenshots or GIFs here to showcase UI & features)_  
+_(We will add soon)_  
 
 ---
 
