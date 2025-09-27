@@ -1,4 +1,4 @@
 # .gitignore
 
 # Ignore a specific file by path
-firebase-config.js
+ZAIKABOX/firebase-config.js
