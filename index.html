@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ZAIKABOX - Recipe Slider</title>
+    <title>ZAIKABOX</title>
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -11,9 +11,14 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" />
     <link rel="stylesheet" href="https://necolas.github.io/normalize.css/8.0.1/normalize.css">
     <link rel="stylesheet" href="styles.css" />
+    
 </head>
-
 <body class="flex-column">
+    <!-- Preloader for a better loading experience -->
+    <div id="preloader">
+        <div class="loader-icon"></div>
+    </div>
+
     <header class="main-header">
         <div class="header-content">
             <div class="user-info">
@@ -28,6 +33,7 @@
         </div>
     </header>
 
+    <!-- New, slim search bar positioned below the header -->
     <section class="search-container">
         <div class="search-content">
             <button id="single-random-meal">Generate Random Recipe</button>
@@ -35,41 +41,28 @@
                 <select id="search-type">
                     <option value="">Filter by Type...</option>
                     <option value="c">Category</option>
-                    <option value="a">Area</option>
+                    <option value="a">Country</option>
                     <option value="i">Ingredient</option>
                 </select>
             </div>
             <div id="filter-value-container" class="filter-step hidden">
                 <select id="search-value">
-                    <!-- Options will be dynamically populated -->
+                    <!-- Options will be dynamically populated by app.js -->
                 </select>
             </div>
         </div>
     </section>
 
     <main class="main-content">
-        <div class="meal-slider-container">
-            <!-- Meal cards for the slider will be inserted here by JavaScript -->
-        </div>
-        <div class="meal-grid hidden">
-            <!-- Meal cards for search results will be inserted here by JavaScript -->
-        </div>
-        <div class="random-meal-container hidden">
-            <!-- Random meal card will be inserted here -->
-        </div>
         <div id="toast-loader">
             <div class="spinner"></div>
             <span>Loading recipes...</span>
         </div>
-    </main>
-    
-    <!-- Recipe Modal structure -->
-    <div class="recipe-modal" id="recipe-modal">
-      <div class="modal-content" id="modal-content">
-          <!-- Recipe details will be injected here by JavaScript -->
-      </div>
-    </div>
 
+        <div class="meal-grid">
+            <!-- Meal cards will be inserted here by app.js -->
+        </div>
+    </main>
 
     <footer class="main-footer">
         <section class="source-code">
@@ -79,6 +72,9 @@
         </section>
         <p>&copy; 2024 Zaikabox</p>
     </footer>
-    <script type="module" src="app.js"></script>
+    
+    <script type="module" src="auth.js"></script>
+    <script type="module" src="./app.js"></script>
 </body>
 </html>
+
