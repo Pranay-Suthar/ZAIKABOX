@@ -1,4 +1,4 @@
 # .gitignore
 
 # Ignore a specific file by path
-auth.js
+firebase-config.js
