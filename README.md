@@ -1,57 +1,75 @@
-🍳 Zaikabox - Your Personal Recipe Discovery App
-Zaikabox is a sleek, modern web application designed to help you discover thousands of new and exciting meal recipes from around the world. With a clean, interactive user interface and powerful search capabilities, finding your next favorite meal has never been easier. The app is built with vanilla JavaScript and leverages Firebase for user authentication and data storage, allowing you to save your favorite recipes to a personal cookbook.
+# 🍳 ZaikaBox – Your Personal Recipe Discovery App  
 
-✨ Key Features
-The website is packed with features designed for a seamless and engaging user experience:
+ZaikaBox is a sleek, modern web application designed to help you **discover thousands of exciting recipes** from around the world.  
+With a clean, interactive UI and powerful search capabilities, finding your next favorite meal has never been easier!  
 
-1. User Authentication & Personalization
-Secure Sign-Up & Login: Full user authentication system powered by Firebase Authentication.
+The app is built with **Vanilla JavaScript** and powered by **Firebase**, allowing you to securely log in, save recipes, and sync your personal cookbook in real-time.  
 
-Personal Cookbook: Logged-in users can save their favorite recipes to a personal collection.
+---
 
-Real-time Syncing: Saved recipes are stored in Firestore and synced in real-time across the app.
+## ✨ Key Features  
 
-2. Advanced Recipe Discovery
-Generate Random Recipe: Instantly get a detailed recipe suggestion with a single click.
+### 👤 User Authentication & Personalization  
+- 🔑 **Secure Sign-Up & Login** using Firebase Authentication  
+- 📖 **Personal Cookbook** – save and manage your favorite recipes  
+- 🔄 **Real-time Syncing** with Firebase Firestore across devices  
 
-Dynamic Filtering: An intelligent, two-step search system allows you to filter recipes by:
+### 🍽️ Advanced Recipe Discovery  
+- 🎲 **Generate Random Recipe** with one click  
+- 🧠 **Dynamic Filtering** by:  
+  - Category (e.g., Dessert, Seafood, Breakfast)  
+  - Country/Area (e.g., Italian, Indian, Mexican)  
+  - Main Ingredient (e.g., Chicken, Salmon, Rice)  
+- 🔍 **Live Search Options** powered by TheMealDB API (always up-to-date)  
 
-Category (e.g., Seafood, Breakfast, Dessert)
+### 🖥️ Interactive & Modern UI  
+- 🔎 **Floating, Expandable Search Bar** with smooth animation  
+- 📑 **Detailed Recipe Modal** with ingredients, instructions & YouTube video integration  
+- 🃏 **Interactive Recipe Cards** with hover-reveal & "like/save" feature  
+- 📥 **Load More Pagination** for efficient browsing  
+- 📱 **Fully Responsive** across desktop, tablet, and mobile  
 
-Country/Area (e.g., Italian, Mexican, Indian)
+### 🚧 (In Progress) Dedicated Cookbook Page  
+A dedicated **Cookbook page** (`cookbook.html`) where users can view and manage saved recipes.  
 
-Main Ingredient (e.g., Chicken, Salmon, Rice)
+---
 
-Live Search Options: Filter options are fetched directly from TheMealDB API, ensuring they are always up-to-date.
+## 🛠️ Tech Stack  
 
-3. Interactive & Modern User Interface
-Floating, Expandable Search Bar: A sleek, space-saving search interface that starts as a compact icon and smoothly expands on click.
+- **Frontend**: HTML5, CSS3 (Flexbox, Grid), Vanilla JavaScript (ES6+)  
+- **Backend & Database**: Google Firebase (Authentication, Firestore)  
+- **API**: [TheMealDB API](https://www.themealdb.com/) for recipe data  
+- **Icons**: Font Awesome  
 
-Detailed Recipe Modal: View complete recipe details—including ingredients, step-by-step instructions, and a link to a YouTube video—in a pop-up modal without ever leaving the page.
+---
 
-Interactive Recipe Cards: Beautifully designed cards with a "hover-reveal" effect and an integrated "like" button to save recipes.
+## 🚀 How to Use  
 
-"Load More" Pagination: Search results are displayed in batches of 12, with a "Load More" button for a clean and performant browsing experience.
+1. **Explore** → Open the app and browse trending or random recipes  
+2. **Search & Filter** → Expand the floating search bar to filter by Category, Country, or Ingredient  
+3. **View Recipes** → Open a recipe modal to see ingredients, instructions, and cooking video  
+4. **Save Favorites** → Log in and save recipes to your personal cookbook  
+5. **Cookbook (Coming Soon)** → Manage your saved recipes in one place  
 
-Fully Responsive Design: The interface is optimized for a seamless experience on desktops, tablets, and mobile devices.
+---
 
-4. (In Progress) Dedicated Cookbook Page
-A separate, dedicated page (cookbook.html) where users can view and manage their collection of saved recipes.
+## 📸 Screenshots  
 
-🛠️ Technologies Used
-Frontend: HTML5, CSS3 (Flexbox, Grid), Vanilla JavaScript (ES6+)
+_(Add a few screenshots or GIFs here to showcase UI & features)_  
 
-Backend & Database: Google Firebase (Authentication, Firestore)
+---
 
-API: TheMealDB API for recipe data.
+## 🤝 Contributing  
 
-Icons: Font Awesome for UI icons.
+Contributions are welcome! Feel free to **fork this repo**, submit PRs, or suggest new features via issues.  
 
-🚀 How to Use
-Explore: Open the website and immediately start discovering recipes.
+---
 
-Search: Click the floating search icon on the right to expand the search bar.
+## 📬 Connect  
 
-Filter: Select a filter type (Category, Country, or Ingredient) and then choose from the dynamically populated list of options.
+- 💻 Developed by [Pranay Suthar](https://github.com/Pranay-Suthar)
+- 🌐 Project Repo: [ZaikaBox](https://github.com/Pranay-Suthar/ZAIKABOX)  
 
-Save: Sign up or log in to your account to save your favorite recipes by clicking the heart icon on
+---
+
+⭐ If you like this project, don’t forget to **star the repo** and share it with foodies & developers!  
