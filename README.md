@@ -67,8 +67,8 @@ Contributions are welcome! Feel free to **fork this repo**, submit PRs, or sugge
 
 ## 📬 Connect  
 
-- [Pranay Suthar](https://github.com/Pranay-Suthar)  
 - [Aryan Thakar](https://github.com/aryan9106)
+- [Pranay Suthar](https://github.com/Pranay-Suthar)  
 - 🌐 Project Repo: [ZaikaBox](https://github.com/Pranay-Suthar/ZAIKABOX)  
 
 ---
