@@ -3,4 +3,4 @@
 .env.local
 .env.*
 
-# ZAIKABOX/JS/firebase-config.js
+ZAIKABOX/JS/firebase-config.js
