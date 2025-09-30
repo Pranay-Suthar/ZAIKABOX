@@ -1,2 +1,0 @@
-# ZAIKABOX
-Random Recipes Generator
