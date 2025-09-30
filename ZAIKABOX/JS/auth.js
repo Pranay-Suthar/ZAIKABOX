@@ -1,14 +1,32 @@
 // ================= Firebase Imports =================
-// All imports are now consolidated here
 import {
-  signInWithEmailAndPassword,
-  createUserWithEmailAndPassword,
-  signOut, 
-  onAuthStateChanged
+    signInWithEmailAndPassword,
+    createUserWithEmailAndPassword,
+    signOut,
+    onAuthStateChanged
 } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js';
+import { auth } from '../JS/firebase-config.js';
 
-// Import the configured auth object from your config file
-import { auth } from '../JS/firebase-config.js'; 
+// ================= Toast Notification Function =================
+function showToast(message, type = 'success') {
+    const container = document.getElementById('toast-container');
+    if (!container) return; // Don't run if the container isn't on the page
+
+    const toast = document.createElement('div');
+    toast.className = `toast-notification ${type}`;
+    toast.textContent = message;
+
+    container.appendChild(toast);
+
+    setTimeout(() => {
+        toast.classList.add('show');
+    }, 100);
+
+    setTimeout(() => {
+        toast.classList.remove('show');
+        toast.addEventListener('transitionend', () => toast.remove());
+    }, 4000);
+}
 
 // ================= UI Element References =================
 const authForm = document.querySelector('form');
@@ -16,9 +34,8 @@ const emailInput = document.getElementById('email-field');
 const passwordInput = document.getElementById('password-field');
 const submitButton = document.getElementById('submit-button');
 const formTitle = document.getElementById('form-title');
-const errorMessage = document.getElementById('error-message');
 const toggleContainer = document.getElementById('toggle-auth-mode');
-const toggleAuthModeLink = toggleContainer.querySelector('a');
+const toggleAuthModeLink = toggleContainer ? toggleContainer.querySelector('a') : null;
 
 let isSignUpMode = false;
 
@@ -46,77 +63,82 @@ if (toggleAuthModeLink) {
 }
 
 // ================= Form Submission Handler =================
+// This code will only run on the login page where the form exists.
 if (authForm) {
     authForm.addEventListener('submit', (e) => {
-        e.preventDefault(); // Prevent default form submission
+        e.preventDefault();
 
-        const email = emailInput.value;
+        const email = emailInput.value.trim();
         const password = passwordInput.value;
-        errorMessage.textContent = ''; // Clear previous errors
 
         if (isSignUpMode) {
             // --- Handle Sign Up ---
             createUserWithEmailAndPassword(auth, email, password)
                 .then((userCredential) => {
-                    console.log('Successfully signed up!', userCredential.user);
-                    alert('Account created successfully!');
-                    // Redirect to the index page after successful sign-up
-                    window.location.href = 'index.html';
+                    showToast('Account created successfully!');
+                    setTimeout(() => {
+                        window.location.href = 'index.html';
+                    }, 1500);
                 })
                 .catch((error) => {
-                    console.error('Sign Up Error:', error.message);
-                    errorMessage.textContent = error.message;
+                    let friendlyMessage = "Could not create account. Please try again.";
+                    if (error.code === 'auth/email-already-in-use') {
+                        friendlyMessage = "This email address is already in use.";
+                    } else if (error.code === 'auth/weak-password') {
+                        friendlyMessage = "Password should be at least 6 characters.";
+                    }
+                    showToast(friendlyMessage, 'error');
                 });
 
         } else {
             // --- Handle Sign In ---
             signInWithEmailAndPassword(auth, email, password)
                 .then((userCredential) => {
-                    console.log('Successfully signed in!', userCredential.user);
-                    alert('Welcome back!');
-                    // Redirect to the index page after successful sign-in
-                    window.location.href = 'index.html';
+                    showToast('Login Successful! Redirecting...');
+                    setTimeout(() => {
+                        window.location.href = 'index.html';
+                    }, 1500);
                 })
                 .catch((error) => {
-                    console.error('Sign In Error:', error.message);
-                    errorMessage.textContent = error.message;
+                    let friendlyMessage = "An error occurred. Please try again.";
+                    if (error.code === 'auth/user-not-found' || error.code === 'auth/wrong-password' || error.code === 'auth/invalid-credential') {
+                        friendlyMessage = "Incorrect email or password.";
+                    }
+                    showToast(friendlyMessage, 'error');
                 });
         }
     });
 }
 
 // ================= Auth Guard and Logout Logic =================
-// Listen for authentication state changes
+// This listener runs on ANY page where this script is loaded.
 onAuthStateChanged(auth, (user) => {
     const logoutBtn = document.getElementById('logout-btn');
     const userInfo = document.querySelector('.user-info h1');
 
-    // This logic should ideally be in a script that runs on the main app page (index.html),
-    // but placing it here will work if `auth.js` is loaded on both pages.
     if (user) {
-        // User is signed in. On pages with a logout button, show it.
+        // User is signed in. On the main page, show the logout button and their email.
         if (logoutBtn) logoutBtn.style.display = 'block';
         if (userInfo) userInfo.textContent = `Hello, ${user.email}!`;
     } else {
-        // No user is signed in.
-        // If we are on a protected page (like index.html), redirect to login.
+        // No user is signed in. If they are on the main page (index.html), redirect to login.
         if (window.location.pathname.includes('index.html')) {
             window.location.replace('login.html');
         }
     }
 });
 
-// Handle logout button click
 const logoutBtn = document.getElementById('logout-btn');
 if (logoutBtn) {
     logoutBtn.addEventListener('click', () => {
         signOut(auth)
             .then(() => {
-                // Sign-out successful. The onAuthStateChanged listener will handle the redirect.
-                console.log('User signed out.');
+                showToast("You've been signed out.", "success");
+                // The onAuthStateChanged listener above will automatically handle the redirect to login.html.
             })
             .catch((error) => {
                 console.error('Sign Out Error:', error);
+                showToast("Error signing out. Please try again.", "error");
             });
     });
 }
