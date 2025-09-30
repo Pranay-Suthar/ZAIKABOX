@@ -1,4 +1,6 @@
-# .gitignore
+# Firebase and Google Cloud environment variables
+.env
+.env.local
+.env.*
 
-# Ignore a specific file by path
-ZAIKABOX/firebase-config.js
+# ZAIKABOX/JS/firebase-config.js

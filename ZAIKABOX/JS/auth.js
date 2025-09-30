@@ -1,4 +1,5 @@
 // ================= Firebase Imports =================
+// All imports are now consolidated here
 import {
   signInWithEmailAndPassword,
   createUserWithEmailAndPassword,
@@ -6,10 +7,10 @@ import {
   onAuthStateChanged
 } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js';
 
-// Import the configured auth object from your (untracked) config file
-import { auth } from './firebase-config.js'; 
+// Import the configured auth object from your config file
+import { auth } from '../JS/firebase-config.js'; 
+
 // ================= UI Element References =================
-// Using querySelector('form') to be more robust, as your form may not have an ID
 const authForm = document.querySelector('form');
 const emailInput = document.getElementById('email-field');
 const passwordInput = document.getElementById('password-field');
@@ -85,22 +86,20 @@ if (authForm) {
 }
 
 // ================= Auth Guard and Logout Logic =================
-import { signOut, onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js';
-
-// The auth variable is already defined in your file
-// const auth = getAuth(app); 
-
 // Listen for authentication state changes
 onAuthStateChanged(auth, (user) => {
     const logoutBtn = document.getElementById('logout-btn');
     const userInfo = document.querySelector('.user-info h1');
 
+    // This logic should ideally be in a script that runs on the main app page (index.html),
+    // but placing it here will work if `auth.js` is loaded on both pages.
     if (user) {
-        // User is signed in, show the logout button and user info
+        // User is signed in. On pages with a logout button, show it.
         if (logoutBtn) logoutBtn.style.display = 'block';
         if (userInfo) userInfo.textContent = `Hello, ${user.email}!`;
     } else {
-        // No user is signed in, redirect to login page
+        // No user is signed in.
+        // If we are on a protected page (like index.html), redirect to login.
         if (window.location.pathname.includes('index.html')) {
             window.location.replace('login.html');
         }
