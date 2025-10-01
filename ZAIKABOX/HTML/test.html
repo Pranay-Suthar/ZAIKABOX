@@ -10,15 +10,25 @@
     <script type="module">
         console.log('Module script is running');
         
-        try {
-            import('./JS/firebase-config.js').then(module => {
+        // Test direct file access first
+        fetch('./JS/firebase-config.js')
+            .then(response => {
+                console.log('Fetch response status:', response.status);
+                console.log('Fetch response headers:', response.headers.get('content-type'));
+                return response.text();
+            })
+            .then(text => {
+                console.log('File content preview:', text.substring(0, 200));
+                
+                // Now try the import
+                return import('./JS/firebase-config.js');
+            })
+            .then(module => {
                 console.log('Firebase config imported successfully:', module);
-            }).catch(error => {
-                console.error('Failed to import firebase-config:', error);
+            })
+            .catch(error => {
+                console.error('Error:', error);
             });
-        } catch (error) {
-            console.error('Module import error:', error);
-        }
     </script>
 </body>
 </html>
