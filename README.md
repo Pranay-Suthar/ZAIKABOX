@@ -16,7 +16,7 @@ A modern, responsive web application for discovering and managing recipes from a
 ### 🏠 Home Page
 *Main dashboard with recipe categories and search functionality*
 
-![Home Page](./images/photo1.png)
+![Home Page](ZAIKABOX/images/photo1.png)
 
 **Features shown:**
 - Modern navigation with fork logo
@@ -30,7 +30,7 @@ A modern, responsive web application for discovering and managing recipes from a
 ### 🔐 Login Page
 *Modern split-screen authentication with seasonal backgrounds*
 
-![Login Page](./images/photo2.png)
+![Login Page](ZAIKABOX/images/photo2.png)
 
 **Features shown:**
 - Split-screen design with branding
@@ -45,7 +45,7 @@ A modern, responsive web application for discovering and managing recipes from a
 ### 📱 Mobile Experience
 *Fully responsive design optimized for mobile devices*
 
-![Mobile View](./images/photo3.png)
+![Mobile View](ZAIKABOX/images/photo3.png)
 
 **Features shown:**
 - Responsive navigation
@@ -58,7 +58,7 @@ A modern, responsive web application for discovering and managing recipes from a
 ### 🍽️ Recipe Details Modal
 *Comprehensive recipe information with smart analysis*
 
-![Recipe Modal](./images/photo4.png)
+![Recipe Modal](ZAIKABOX/images/photo4.png)
 
 **Features shown:**
 - High-quality recipe images
@@ -75,7 +75,7 @@ A modern, responsive web application for discovering and managing recipes from a
 ### 👤 User Profile
 *Personalized dashboard for managing bookmarks and account*
 
-![Profile Page](./images/photo5.png)
+![Profile Page](ZAIKABOX/images/photo5.png)
 
 **Features shown:**
 - User information display
@@ -89,7 +89,7 @@ A modern, responsive web application for discovering and managing recipes from a
 ### 🔍 Search & Filter
 *Advanced search capabilities with multiple filter options*
 
-![Search Interface](./images/photo6.png)
+![Search Interface](ZAIKABOX/images/photo6.png)
 
 **Features shown:**
 - Category-based filtering
@@ -103,7 +103,7 @@ A modern, responsive web application for discovering and managing recipes from a
 ### 🥘 Pantry Search
 *Find recipes based on available ingredients*
 
-![Pantry Search](./images/photo7.png)
+![Pantry Search](ZAIKABOX/images/photo7.png)
 
 **Features shown:**
 - Ingredient input system
@@ -117,7 +117,7 @@ A modern, responsive web application for discovering and managing recipes from a
 ### 📚 Bookmarks Management
 *Save and organize favorite recipes*
 
-![Bookmarks](./images/photo8.png)
+![Bookmarks](ZAIKABOX/images/photo8.png)
 
 **Features shown:**
 - Grid layout for saved recipes
@@ -131,7 +131,7 @@ A modern, responsive web application for discovering and managing recipes from a
 ### � Random Recnipe Generator
 *Discover new recipes with a single click*
 
-![Random Search Button](./images/photo9.png)
+![Random Search Button](ZAIKABOX/images/photo9.png)
 
 **Features shown:**
 - One-click random recipe discovery
