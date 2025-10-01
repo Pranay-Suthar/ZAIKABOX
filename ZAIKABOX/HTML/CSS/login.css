@@ -1,0 +1,377 @@
+/*!
+ * Bootstrap v4.3.1 (Abridged) & Custom Styles for Zaikabox Login
+ */
+
+/* Main Variables and Core Reset */
+:root {
+  --blue: #007bff;
+  --white: #fff;
+  --gray-dark: #343a40;
+  --primary: #007bff;
+  --font-family-sans-serif: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+}
+
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+html {
+  font-family: sans-serif;
+  line-height: 1.15;
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  margin: 0;
+  font-family: var(--font-family-sans-serif);
+  height: 800px;
+  font-size: 1rem;
+  font-weight: 400;
+  line-height: 1.5;
+  color: #212529;
+  text-align: left;
+  background-color: var(--white);
+}
+
+h1, h3 {
+  margin-top: 0;
+  margin-bottom: 0.5rem;
+}
+h1 { font-size: 2.5rem; }
+h3 { font-size: 1.75rem; }
+
+p {
+  margin-top: 0;
+  margin-bottom: 1rem;
+}
+
+a {
+  color: var(--primary);
+  text-decoration: none;
+  background-color: transparent;
+}
+a:hover {
+  color: #0056b3;
+  text-decoration: underline;
+}
+
+label {
+  display: inline-block;
+  margin-bottom: 0.5rem;
+}
+
+button, input {
+  margin: 0;
+  font-family: inherit;
+  font-size: inherit;
+  line-height: inherit;
+  overflow: visible;
+}
+button, [type="submit"] {
+  -webkit-appearance: button;
+}
+button:not(:disabled), [type="submit"]:not(:disabled) {
+  cursor: pointer;
+}
+
+/* Bootstrap Grid & Utilities Used on This Page */
+.container {
+  width: 100%;
+  padding-right: 15px;
+  padding-left: 15px;
+  margin-right: auto;
+  margin-left: auto;
+}
+@media (min-width: 576px) { .container { max-width: 540px; } }
+@media (min-width: 768px) { .container { max-width: 720px; } }
+@media (min-width: 992px) { .container { max-width: 960px; } }
+
+.row {
+  display: flex;
+  flex-wrap: wrap;
+  margin-right: -15px;
+  margin-left: -15px;
+}
+
+.justify-content-center { justify-content: center !important; }
+
+.col-md-6, .col-lg-4 {
+  position: relative;
+  width: 100%;
+  padding-right: 15px;
+  padding-left: 15px;
+}
+
+@media (min-width: 768px) {
+  .col-md-6 { flex: 0 0 50%; max-width: 50%; }
+}
+@media (min-width: 992px) {
+  .col-lg-4 { flex: 0 0 33.33333%; max-width: 33.33333%; }
+}
+
+.form-group { margin-bottom: 1rem; }
+
+.form-control {
+  display: block;
+  width: 100%;
+  height: calc(1.5em + 0.75rem + 2px);
+  padding: 0.375rem 0.75rem;
+  font-size: 1rem;
+  font-weight: 400;
+  line-height: 1.5;
+  color: #495057;
+  background-color: var(--white);
+  background-clip: padding-box;
+  border: 1px solid #ced4da;
+  border-radius: 0.25rem;
+  transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+}
+
+.btn {
+  display: inline-block;
+  font-weight: 400;
+  color: #212529;
+  text-align: center;
+  vertical-align: middle;
+  user-select: none;
+  background-color: transparent;
+  border: 1px solid transparent;
+  padding: 0.375rem 0.75rem;
+  font-size: 1rem;
+  line-height: 1.5;
+  border-radius: 0.25rem;
+  transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+}
+.btn:hover { text-decoration: none; }
+
+.btn-primary {
+  color: var(--white);
+  background-color: var(--primary);
+  border-color: var(--primary);
+}
+.btn-primary:hover {
+  color: var(--white);
+  background-color: #0069d9;
+  border-color: #0062cc;
+}
+
+.p-0 { padding: 0 !important; }
+.px-3 { padding-right: 1rem !important; padding-left: 1rem !important; }
+.mb-4 { margin-bottom: 1.5rem !important; }
+.mb-5 { margin-bottom: 3rem !important; }
+.text-center { text-align: center !important; }
+.w-50 { width: 50% !important; }
+.w-100 { width: 100% !important; }
+@media (min-width: 768px) {
+  .d-md-flex { display: flex !important; }
+  .text-md-right { text-align: right !important; }
+}
+
+
+/* =================================================================
+   YOUR CUSTOM STYLES (Unchanged)
+   ================================================================= */
+
+body {
+  font-family: "Lato", Arial, sans-serif;
+  font-size: 16px;
+  line-height: 1.8;
+  font-weight: normal;
+  color: gray;
+  position: relative;
+  z-index: 0;
+  padding: 0;
+}
+body:after {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  content: '';
+  background: #000;
+  opacity: .3;
+  z-index: -1;
+}
+
+a {
+  transition: .3s all ease;
+  color: #fbceb5;
+}
+a:hover, a:focus {
+  text-decoration: none !important;
+  outline: none !important;
+  box-shadow: none;
+}
+
+.ftco-section {
+  padding: 7em 0;
+}
+
+.heading-section {
+  font-size: 28px;
+  color: #fff;
+}
+
+.login-wrap {
+  position: relative;
+  color: rgba(255, 255, 255, 0.9);
+}
+.login-wrap h3 {
+  font-weight: 300;
+  color: #fff;
+}
+
+.field-icon {
+  position: absolute;
+  top: 50%;
+  right: 15px;
+  transform: translateY(-50%);
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.form-control {
+  background: transparent;
+  border: none;
+  height: 50px;
+  color: white !important;
+  border: 1px solid transparent;
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: 40px;
+  padding-left: 20px;
+  padding-right: 20px;
+  transition: 0.3s;
+}
+.form-control::-webkit-input-placeholder { color: rgba(255, 255, 255, 0.8) !important; }
+.form-control::-moz-placeholder { color: rgba(255, 255, 255, 0.8) !important; }
+.form-control:-ms-input-placeholder { color: rgba(255, 255, 255, 0.8) !important; }
+.form-control:-moz-placeholder { color: rgba(255, 255, 255, 0.8) !important; }
+.form-control:hover, .form-control:focus {
+  background: transparent;
+  outline: none;
+  box-shadow: none;
+  border-color: rgba(255, 255, 255, 0.4);
+}
+
+.checkbox-wrap {
+  display: block;
+  position: relative;
+  padding-left: 30px;
+  margin-bottom: 12px;
+  cursor: pointer;
+  font-size: 16px;
+  font-weight: 500;
+  user-select: none;
+}
+.checkbox-wrap input {
+  position: absolute;
+  opacity: 0;
+  cursor: pointer;
+  height: 0;
+  width: 0;
+}
+.checkmark {
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+.checkmark:after {
+  content: "\f0c8";
+  font-family: "FontAwesome";
+  position: absolute;
+  color: rgba(255, 255, 255, 0.1);
+  font-size: 20px;
+  margin-top: -4px;
+  transition: 0.3s;
+}
+.checkbox-wrap input:checked ~ .checkmark:after {
+  display: block;
+  content: "\f14a";
+  font-family: "FontAwesome";
+  color: rgba(0, 0, 0, 0.2);
+}
+.checkbox-primary { color: #fbceb5; }
+.checkbox-primary input:checked ~ .checkmark:after { color: #fbceb5; }
+
+.btn {
+  cursor: pointer;
+  border-radius: 40px;
+  box-shadow: none !important;
+  font-size: 15px;
+  text-transform: uppercase;
+}
+.btn:hover, .btn:active, .btn:focus { outline: none; }
+.btn.btn-primary {
+  background: #fbceb5 !important;
+  border: 1px solid #fbceb5 !important;
+  color: #000 !important;
+}
+.btn.btn-primary:hover {
+  border: 1px solid #fbceb5;
+  background: transparent;
+  color: #fbceb5;
+}
+
+/* Background Slideshow */
+#bg-slideshow-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+}
+#bg-slideshow-1, #bg-slideshow-2 {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    opacity: 0;
+    transition: opacity 2s ease-in-out;
+}
+
+/* =================================================================
+   TOAST NOTIFICATION STYLES
+   ================================================================= */
+
+#toast-container {
+    position: fixed;
+    top: 25px;
+    right: 25px;
+    z-index: 9999;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+}
+
+.toast-notification {
+    background-color: #333;
+    color: #fff;
+    padding: 16px 24px;
+    margin-bottom: 10px;
+    border-radius: 8px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+    font-family: "Lato", Arial, sans-serif;
+    font-size: 16px;
+    opacity: 0;
+    transform: translateX(120%);
+    transition: all 0.4s ease-in-out;
+}
+
+.toast-notification.show {
+    opacity: 1;
+    transform: translateX(0);
+}
+
+/* Different styles for success and error messages */
+.toast-notification.success {
+    background-color: #28a745; /* Green */
+}
+
+.toast-notification.error {
+    background-color: #dc3545; /* Red */
+}

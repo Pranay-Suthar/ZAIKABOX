@@ -53,9 +53,45 @@ A dedicated **Cookbook page** (`cookbook.html`) where users can view and manage 
 
 ---
 
-## 📸 Screenshots  
+🖼️ Photo Gallery
+Here is a showcase of our project in action, featuring different screens and functionalities.
 
-_(We will add soon)_  
+<table align="center">
+<tr>
+<td colspan="2" align="center">
+<p><b>Main Dashboard</b></p>
+<img src="ZAIKABOX/images/photo1.png" alt="Collage Image 1" width="100%">
+</td>
+<td colspan="2" align="center">
+<p><b>Recipe Search</b></p>
+<img src="ZAIKABOX/images/photo2.png" alt="Collage Image 2" width="100%">
+</td>
+</tr>
+<tr>
+<td colspan="4" align="center">
+<p><b>Featured Recipe View</b></p>
+<img src="ZAIKABOX/images/photo5.png" alt="Large central collage image" width="100%">
+</td>
+</tr>
+<tr>
+<td align="center">
+<p><b>Pantry Search</b></p>
+<img src="ZAIKABOX/images/photo4.png" alt="Collage Image 4" width="100%">
+</td>
+<td align="center">
+<p><b>Mobile View</b></p>
+<img src="ZAIKABOX/images/photo4.png" alt="Collage Image 5" width="100%">
+</td>
+<td align="center">
+<p><b>Testimonials</b></p>
+<img src="ZAIKABOX/images/photo3.png" alt="Collage Image 6" width="100%">
+</td>
+<td align="center">
+<p><b>Login Page</b></p>
+<img src="ZAIKABOX/images/photo2.png" alt="Collage Image 7" width="100%">
+</td>
+</tr>
+</table>
 
 ---
 
