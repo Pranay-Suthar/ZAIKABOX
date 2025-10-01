@@ -3,5 +3,7 @@
 .env.local
 .env.*
 
-# Note: firebase-config.js is included in the repo since it contains public config
-# Only exclude files with private keys or secrets
+# Firebase configuration file (generated during build)
+ZAIKABOX/HTML/JS/firebase-config.js
+
+# Note: firebase-config.template.js is the template, firebase-config.js is generated
