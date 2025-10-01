@@ -9,7 +9,7 @@ import {
     signInWithPopup,
     updateProfile
 } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js';
-import { auth } from '../JS/firebase-config.js';
+import { auth } from './firebase-config.js';
 
 // ================= Toast Notification Function =================
 function showToast(message, type = 'success') {

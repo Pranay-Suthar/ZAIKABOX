@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>JS Module Test</title>
+</head>
+<body>
+    <h1>Testing JavaScript Modules</h1>
+    <p>Check the browser console for results.</p>
+    
+    <script type="module">
+        console.log('Module script is running');
+        
+        try {
+            import('./JS/firebase-config.js').then(module => {
+                console.log('Firebase config imported successfully:', module);
+            }).catch(error => {
+                console.error('Failed to import firebase-config:', error);
+            });
+        } catch (error) {
+            console.error('Module import error:', error);
+        }
+    </script>
+</body>
+</html>
