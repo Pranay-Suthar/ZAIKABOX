@@ -1,15 +1,17 @@
 <!DOCTYPE html>
 <html>
+
 <head>
     <title>JS Module Test</title>
 </head>
+
 <body>
     <h1>Testing JavaScript Modules</h1>
     <p>Check the browser console for results.</p>
-    
+
     <script type="module">
         console.log('Module script is running');
-        
+
         // Test direct file access first
         fetch('./JS/firebase-config.js')
             .then(response => {
@@ -19,7 +21,7 @@
             })
             .then(text => {
                 console.log('File content preview:', text.substring(0, 200));
-                
+
                 // Now try the import
                 return import('./JS/firebase-config.js');
             })
@@ -31,4 +33,5 @@
             });
     </script>
 </body>
+
 </html>

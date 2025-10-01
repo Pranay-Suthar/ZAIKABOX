@@ -1,2 +1,4 @@
 # Netlify redirects file
-/*    /index.html   200
+# Only redirect specific routes, not all files
+/profile    /profile.html   200
+/login      /login.html     200
