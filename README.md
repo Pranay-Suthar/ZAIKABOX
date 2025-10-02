@@ -202,8 +202,8 @@ ZaikaBox is fully responsive and optimized for:
 
 ## 👥 Contributors
 
-- **[Pranay Suthar](mailto:pranaymevada57@gmail.com)**  - Lead Developer
-- **[Aryan Thakar](mailto:thakararyan9106@gmail.com)** - Co-Developer
+- **[Pranay Suthar](https://github.com/Pranay-Suthar)**  - Lead Developer
+- **[Aryan Thakar](https://github.com/aryan9106)** - Co-Developer
 
 ## 📄 License
 
