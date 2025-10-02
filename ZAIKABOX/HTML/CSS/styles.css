@@ -2626,6 +2626,31 @@ ing Badge */
     opacity: 0.9;
 }
 
+.auth-prompt-features {
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 8px;
+    padding: 1rem;
+    margin: 1rem 0;
+}
+
+.auth-prompt-features h4 {
+    margin: 0 0 0.75rem 0;
+    color: var(--primary);
+    font-size: 1rem;
+}
+
+.auth-prompt-features ul li {
+    padding: 0.4rem 0;
+    font-size: 0.85rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.auth-prompt-features ul li strong {
+    color: var(--primary);
+}
+
 .auth-prompt-content ul {
     list-style: none;
     padding: 0;
@@ -2768,6 +2793,40 @@ ing Badge */
     padding: 0.5rem 0;
     color: var(--text-dark);
     font-size: 0.95rem;
+}
+
+.auth-modal-testimonial {
+    background: rgba(99, 102, 241, 0.1);
+    border-left: 3px solid var(--primary);
+    padding: 1rem;
+    margin: 1rem 0;
+    border-radius: 0 8px 8px 0;
+    font-style: italic;
+}
+
+.auth-modal-testimonial strong {
+    display: block;
+    margin-top: 0.5rem;
+    font-style: normal;
+    color: var(--primary);
+}
+
+.auth-modal-benefits h4 {
+    color: var(--primary);
+    margin-bottom: 1rem;
+    font-size: 1.1rem;
+}
+
+.auth-modal-benefits ul li {
+    padding: 0.5rem 0;
+    display: flex;
+    align-items: flex-start;
+    gap: 0.5rem;
+    line-height: 1.4;
+}
+
+.auth-modal-benefits ul li strong {
+    color: var(--text-strong);
 }
 
 .auth-modal-actions {
