@@ -1,5 +1,17 @@
 /* Profile Page Styles */
 
+/* Navigation Button Styles for Profile Page */
+#back-to-home-btn {
+    background-color: var(--text-dark) !important;
+    color: var(--card-bg) !important;
+    border-radius: 9999px !important;
+}
+
+#back-to-home-btn:hover {
+    background-color: var(--text-strong) !important;
+    transform: translateY(-1px);
+}
+
 .profile-main {
     min-height: calc(100vh - 80px);
     padding: 2rem 0;
@@ -397,6 +409,21 @@
 
 /* Responsive Design */
 @media (max-width: 768px) {
+    /* Mobile navbar adjustments for profile page */
+    .navbar {
+        grid-template-columns: auto 1fr;
+        gap: 1rem;
+    }
+
+    .nav-auth {
+        gap: 8px;
+        justify-content: flex-end; /* Keep buttons on the right side */
+    }
+
+    .social-media-links {
+        display: none;
+    }
+
     .profile-container {
         padding: 0 1rem;
     }
@@ -418,7 +445,35 @@
     }
     
     .bookmarks-grid {
-        grid-template-columns: 1fr;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 1rem;
+    }
+    
+    .bookmark-recipe-card {
+        font-size: 0.9rem;
+    }
+    
+    .bookmark-recipe-image {
+        height: 150px;
+    }
+    
+    .bookmark-recipe-info {
+        padding: 0.75rem;
+    }
+    
+    .bookmark-recipe-title {
+        font-size: 1rem;
+        margin-bottom: 0.25rem;
+    }
+    
+    .bookmark-recipe-category,
+    .bookmark-recipe-area {
+        font-size: 0.75rem;
+        padding: 0.2rem 0.4rem;
+    }
+    
+    .bookmark-recipe-date {
+        font-size: 0.7rem;
     }
     
     .confirmation-actions {
@@ -427,6 +482,24 @@
 }
 
 @media (max-width: 480px) {
+    /* Mobile navbar adjustments for very small screens */
+    .navbar {
+        padding: 8px 12px;
+        border-radius: 20px;
+        grid-template-columns: auto 1fr;
+        gap: 0.5rem;
+    }
+
+    .nav-auth {
+        gap: 6px;
+        justify-content: flex-end;
+    }
+
+    .nav-auth button {
+        padding: 6px 12px;
+        font-size: 0.85rem;
+    }
+
     .profile-header {
         padding: 1.5rem;
     }
@@ -441,6 +514,46 @@
     
     .profile-stats {
         gap: 1rem;
+    }
+    
+    .bookmarks-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 0.75rem;
+    }
+    
+    .bookmark-recipe-image {
+        height: 120px;
+    }
+    
+    .bookmark-recipe-info {
+        padding: 0.5rem;
+    }
+    
+    .bookmark-recipe-title {
+        font-size: 0.9rem;
+        line-height: 1.2;
+    }
+    
+    .bookmark-recipe-meta {
+        flex-direction: column;
+        gap: 0.25rem;
+        align-items: flex-start;
+    }
+    
+    .bookmark-recipe-category,
+    .bookmark-recipe-area {
+        font-size: 0.7rem;
+        padding: 0.15rem 0.3rem;
+    }
+    
+    .bookmark-recipe-date {
+        font-size: 0.65rem;
+    }
+    
+    .bookmark-remove-btn {
+        width: 28px;
+        height: 28px;
+        font-size: 0.8rem;
     }
 }
 
