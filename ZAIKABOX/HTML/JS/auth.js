@@ -9,7 +9,8 @@ import {
     signInWithPopup,
     updateProfile
 } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js';
-import { auth } from './firebase-config.js';
+import { auth, db } from './firebase-config.js';
+import { doc, setDoc, serverTimestamp } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js';
 
 // ================= Toast Notification Function =================
 function showToast(message, type = 'success') {
@@ -104,7 +105,15 @@ function validateEmail(email) {
 }
 
 function validatePassword(password) {
-    return password.length >= 6;
+    if (isSignUpMode) {
+        // For signup, require stronger password
+        const { checks } = checkPasswordStrength(password);
+        const metCount = Object.values(checks).filter(Boolean).length;
+        return metCount >= 4; // Require at least 4 out of 5 criteria
+    } else {
+        // For login, just check minimum length
+        return password.length >= 6;
+    }
 }
 
 // ================= UI Toggling Logic =================
@@ -118,12 +127,26 @@ function toggleAuthMode() {
         toggleContainer.firstChild.textContent = "Already have an account? ";
         toggleAuthModeLink.textContent = "Sign In";
         confirmPasswordGroup.style.display = 'block';
+        
+        // Show password strength for signup
+        if (passwordInput.value.length > 0) {
+            updatePasswordStrength(passwordInput.value);
+        }
     } else {
-        formTitle.textContent = "Have an account?";
+        formTitle.textContent = "Welcome Back";
         submitButton.querySelector('.btn-text').textContent = "Sign In";
         toggleContainer.firstChild.textContent = "Don't have an account? ";
-        toggleAuthModeLink.textContent = "Sign Up";
+        toggleAuthModeLink.textContent = "Create Account";
         confirmPasswordGroup.style.display = 'none';
+        
+        // Hide password strength for login
+        if (passwordStrengthContainer) {
+            passwordStrengthContainer.style.display = 'none';
+        }
+        const passwordMatchContainer = document.getElementById('password-match');
+        if (passwordMatchContainer) {
+            passwordMatchContainer.style.display = 'none';
+        }
     }
 }
 
@@ -152,6 +175,114 @@ if (toggleConfirmPasswordBtn) {
         toggleConfirmPasswordBtn.classList.toggle('fa-eye');
         toggleConfirmPasswordBtn.classList.toggle('fa-eye-slash');
     });
+}
+
+// ================= Password Strength Functionality =================
+const passwordStrengthContainer = document.getElementById('password-strength');
+const strengthFill = document.getElementById('strength-fill');
+const strengthText = document.getElementById('strength-text');
+const requirements = {
+    length: document.getElementById('req-length'),
+    uppercase: document.getElementById('req-uppercase'),
+    lowercase: document.getElementById('req-lowercase'),
+    number: document.getElementById('req-number'),
+    special: document.getElementById('req-special')
+};
+
+function checkPasswordStrength(password) {
+    const checks = {
+        length: password.length >= 8,
+        uppercase: /[A-Z]/.test(password),
+        lowercase: /[a-z]/.test(password),
+        number: /\d/.test(password),
+        special: /[!@#$%^&*(),.?":{}|<>]/.test(password)
+    };
+    
+    const metCount = Object.values(checks).filter(Boolean).length;
+    let strength = 'weak';
+    let strengthLabel = 'Weak';
+    
+    if (metCount >= 5) {
+        strength = 'strong';
+        strengthLabel = 'Strong';
+    } else if (metCount >= 4) {
+        strength = 'good';
+        strengthLabel = 'Good';
+    } else if (metCount >= 2) {
+        strength = 'fair';
+        strengthLabel = 'Fair';
+    }
+    
+    return { checks, strength, strengthLabel };
+}
+
+function updatePasswordStrength(password) {
+    if (!passwordStrengthContainer) return;
+    
+    if (password.length === 0) {
+        passwordStrengthContainer.style.display = 'none';
+        return;
+    }
+    
+    passwordStrengthContainer.style.display = 'block';
+    const { checks, strength, strengthLabel } = checkPasswordStrength(password);
+    
+    // Update strength bar
+    strengthFill.className = `strength-fill ${strength}`;
+    strengthText.className = `strength-text ${strength}`;
+    strengthText.textContent = `Password strength: ${strengthLabel}`;
+    
+    // Update requirements
+    Object.keys(checks).forEach(key => {
+        const requirement = requirements[key];
+        if (requirement) {
+            if (checks[key]) {
+                requirement.classList.add('met');
+            } else {
+                requirement.classList.remove('met');
+            }
+        }
+    });
+}
+
+function updatePasswordMatch() {
+    const passwordMatchContainer = document.getElementById('password-match');
+    const matchIndicator = document.getElementById('match-indicator');
+    const matchText = document.getElementById('match-text');
+    
+    if (!passwordMatchContainer || !confirmPasswordInput) return;
+    
+    const password = passwordInput.value;
+    const confirmPassword = confirmPasswordInput.value;
+    
+    if (confirmPassword.length === 0) {
+        passwordMatchContainer.style.display = 'none';
+        return;
+    }
+    
+    passwordMatchContainer.style.display = 'block';
+    
+    if (password === confirmPassword && password.length > 0) {
+        matchIndicator.className = 'match-indicator match';
+        matchText.textContent = 'Passwords match';
+    } else {
+        matchIndicator.className = 'match-indicator no-match';
+        matchText.textContent = 'Passwords do not match';
+    }
+}
+
+// Password strength event listeners
+if (passwordInput) {
+    passwordInput.addEventListener('input', (e) => {
+        if (isSignUpMode) {
+            updatePasswordStrength(e.target.value);
+        }
+    });
+}
+
+if (confirmPasswordInput) {
+    confirmPasswordInput.addEventListener('input', updatePasswordMatch);
+    passwordInput.addEventListener('input', updatePasswordMatch);
 }
 
 // Forgot password modal
@@ -192,6 +323,25 @@ if (googleSigninBtn) {
         try {
             setButtonLoading(googleSigninBtn, true);
             const result = await signInWithPopup(auth, provider);
+            const user = result.user;
+            
+            // Create or update user profile in Firestore for admin panel
+            try {
+                await setDoc(doc(db, 'userProfiles', user.uid), {
+                    uid: user.uid,
+                    email: user.email,
+                    displayName: user.displayName || 'Food Enthusiast',
+                    photoURL: user.photoURL || null,
+                    createdAt: serverTimestamp(),
+                    lastLoginAt: serverTimestamp(),
+                    provider: 'google',
+                    bookmarkCount: 0
+                }, { merge: true }); // Use merge to update existing profiles
+                console.log('User profile created/updated in Firestore');
+            } catch (firestoreError) {
+                console.error('Error creating user profile:', firestoreError);
+            }
+            
             showToast('Google sign-in successful!');
             setTimeout(() => {
                 window.location.href = 'index.html';
@@ -266,11 +416,28 @@ if (authForm) {
             if (isSignUpMode) {
                 // --- Handle Sign Up ---
                 const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+                const user = userCredential.user;
                 
                 // Set default display name
-                await updateProfile(userCredential.user, {
+                await updateProfile(user, {
                     displayName: 'Food Enthusiast'
                 });
+                
+                // Create user profile in Firestore for admin panel
+                try {
+                    await setDoc(doc(db, 'userProfiles', user.uid), {
+                        uid: user.uid,
+                        email: user.email,
+                        displayName: 'Food Enthusiast',
+                        createdAt: serverTimestamp(),
+                        lastLoginAt: serverTimestamp(),
+                        bookmarkCount: 0
+                    });
+                    console.log('User profile created in Firestore');
+                } catch (firestoreError) {
+                    console.error('Error creating user profile:', firestoreError);
+                    // Don't fail the signup if Firestore write fails
+                }
                 
                 showToast('Account created successfully!');
                 setTimeout(() => {

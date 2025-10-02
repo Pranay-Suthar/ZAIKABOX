@@ -1,5 +1,6 @@
 import { bookmarkManager } from './bookmarks.js';
 import { authGuard } from './auth-guard.js';
+import { adminAuth } from './admin-auth.js';
 // Uncomment the line below for Firebase debugging
 // import { testFirebaseConnection } from './firebase-test.js';
 // import './debug-bookmarks.js';

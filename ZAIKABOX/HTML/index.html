@@ -14,6 +14,7 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
 
     <link rel="stylesheet" href="CSS/styles.css">
+    <link rel="stylesheet" href="CSS/search-fix.css">
 </head>
 
 <body>
@@ -54,6 +55,9 @@
             </div>
 
             <div class="nav-auth">
+                <button id="theme-toggle-btn" title="Customize Theme" aria-label="Customize Theme">
+                    <i class="fa fa-palette"></i>
+                </button>
                 <button id="profile-btn" title="My Profile" aria-label="My Profile">
                     <i class="fa fa-user"></i> Profile
                 </button>
@@ -398,8 +402,10 @@
         </div>
     </footer>
 
+    <script type="module" src="JS/theme-manager.js"></script>
     <script type="module" src="JS/auth.js"></script>
     <script type="module" src="JS/auth-guard.js"></script>
+    <script type="module" src="JS/admin-auth.js"></script>
     <script type="module" src="JS/bookmarks.js"></script>
     <script type="module" src="JS/app.js"></script>
 

@@ -75,6 +75,34 @@
                             <input id="password-field" type="password" class="form-input" placeholder="Enter your password" required>
                             <span class="fa fa-eye field-icon toggle-password" id="toggle-password"></span>
                         </div>
+                        <div class="password-strength" id="password-strength" style="display: none;">
+                            <div class="strength-bar">
+                                <div class="strength-fill" id="strength-fill"></div>
+                            </div>
+                            <div class="strength-text" id="strength-text">Password strength</div>
+                            <div class="strength-requirements" id="strength-requirements">
+                                <div class="requirement" id="req-length">
+                                    <i class="fa fa-times"></i>
+                                    <span>At least 8 characters</span>
+                                </div>
+                                <div class="requirement" id="req-uppercase">
+                                    <i class="fa fa-times"></i>
+                                    <span>One uppercase letter</span>
+                                </div>
+                                <div class="requirement" id="req-lowercase">
+                                    <i class="fa fa-times"></i>
+                                    <span>One lowercase letter</span>
+                                </div>
+                                <div class="requirement" id="req-number">
+                                    <i class="fa fa-times"></i>
+                                    <span>One number</span>
+                                </div>
+                                <div class="requirement" id="req-special">
+                                    <i class="fa fa-times"></i>
+                                    <span>One special character</span>
+                                </div>
+                            </div>
+                        </div>
                         <div class="field-error" id="password-error"></div>
                     </div>
 
@@ -84,6 +112,12 @@
                             <i class="fa fa-lock input-icon"></i>
                             <input id="confirm-password-field" type="password" class="form-input" placeholder="Confirm your password">
                             <span class="fa fa-eye field-icon toggle-confirm-password" id="toggle-confirm-password"></span>
+                        </div>
+                        <div class="password-match" id="password-match" style="display: none;">
+                            <div class="match-indicator" id="match-indicator">
+                                <i class="fa fa-times"></i>
+                                <span id="match-text">Passwords do not match</span>
+                            </div>
                         </div>
                         <div class="field-error" id="confirm-password-error"></div>
                     </div>
