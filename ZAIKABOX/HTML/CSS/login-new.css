@@ -2,6 +2,32 @@
  * Modern Login Page for ZaikaBox
  */
 
+/* 🍊 VIBRANT FOOD PALETTE - Login Theme */
+:root {
+  /* Primary Colors - Modern & Trustworthy */
+  --primary: #6366F1;
+  --primary-light: #818CF8;
+  --primary-dark: #4F46E5;
+  
+  /* Secondary Colors - Warm & Energetic */
+  --secondary: #F59E0B;
+  --secondary-light: #FCD34D;
+  --accent: #10B981;
+
+  /* Text Colors - Readable & Modern */
+  --text-strong: #1F2937;
+  --text-dark: #374151;
+  --text-light: #6B7280;
+
+  /* Background & Surface Colors - Clean & Modern */
+  --bg: #F9FAFB;
+  --bg-alt: #F3F4F6;
+  --card-bg: #FFFFFF;
+
+  /* Borders & Shadows - Soft & Modern */
+  --border-light: #E5E7EB;
+}
+
 /* Reset and Base Styles */
 *, *::before, *::after {
   box-sizing: border-box;
@@ -93,7 +119,7 @@ body {
 .brand-logo {
   width: 100px;
   height: 100px;
-  background: linear-gradient(135deg, #fbceb5, #f0bb78);
+  background: linear-gradient(135deg, #FF6347, #FF4500);
   border-radius: 24px;
   display: flex;
   align-items: center;
@@ -119,7 +145,7 @@ body {
   color: #fff;
   margin: 0 0 1rem 0;
   text-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
-  background: linear-gradient(135deg, #fff, #fbceb5);
+  background: linear-gradient(135deg, #fff, #FF6347);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
@@ -248,8 +274,8 @@ body {
 
 .form-input:focus {
   outline: none;
-  border-color: #fbceb5;
-  box-shadow: 0 0 0 3px rgba(251, 206, 181, 0.1);
+  border-color: #FF4500;
+  box-shadow: 0 0 0 3px rgba(255, 69, 0, 0.1);
   transform: scale(1.02);
 }
 
@@ -270,7 +296,7 @@ body {
 }
 
 .field-icon:hover {
-  color: #fbceb5;
+  color: #FF4500;
   transform: translateY(-50%) scale(1.1);
 }
 
@@ -319,8 +345,8 @@ body {
 }
 
 .checkbox-label input:checked + .checkmark {
-  background: #fbceb5;
-  border-color: #fbceb5;
+  background: #FF4500;
+  border-color: #FF4500;
 }
 
 .checkbox-label input:checked + .checkmark::after {
@@ -366,14 +392,16 @@ body {
 }
 
 .primary-btn {
-  background: linear-gradient(135deg, #fbceb5, #f0bb78);
+  background: linear-gradient(135deg, #FF4500, #FF7F50);
   color: #fff;
   box-shadow: 0 4px 15px rgba(251, 206, 181, 0.4);
 }
 
 .primary-btn:hover {
+  background: var(--text-strong);
+  color: var(--primary);
   transform: scale(1.02);
-  box-shadow: 0 8px 25px rgba(251, 206, 181, 0.5);
+  box-shadow: 0 8px 25px rgba(47, 47, 47, 0.5);
 }
 
 .primary-btn:active {
@@ -437,14 +465,14 @@ body {
 }
 
 .auth-link {
-  color: #fbceb5;
+  color: #FF4500;
   text-decoration: none;
   font-weight: 600;
   transition: all 0.3s ease;
 }
 
 .auth-link:hover {
-  color: #f0bb78;
+  color: #FF7F50;
   transform: scale(1.05);
 }
 
