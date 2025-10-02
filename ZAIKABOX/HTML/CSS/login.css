@@ -2,12 +2,12 @@
  * Bootstrap v4.3.1 (Abridged) & Custom Styles for Zaikabox Login
  */
 
-/* Main Variables and Core Reset */
+/* 🍊 VIBRANT FOOD PALETTE - Login Theme */
 :root {
-  --blue: #007bff;
+  --blue: #6366F1;
   --white: #fff;
-  --gray-dark: #343a40;
-  --primary: #007bff;
+  --gray-dark: #1F2937;
+  --primary: #6366F1;
   --font-family-sans-serif: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
 }
 
@@ -327,7 +327,7 @@ a:focus {
 .brand-logo {
   width: 80px;
   height: 80px;
-  background: linear-gradient(135deg, #fbceb5, #f0bb78);
+  background: linear-gradient(135deg, #FF6347, #FF4500);
   border-radius: 20px;
   display: flex;
   align-items: center;
@@ -348,7 +348,7 @@ a:focus {
   color: #fff;
   margin: 0 0 1rem 0;
   text-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
-  background: linear-gradient(135deg, #fff, #fbceb5);
+  background: linear-gradient(135deg, #fff, #FF6347);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
@@ -508,7 +508,7 @@ a:focus {
 }
 
 .checkbox-primary {
-  color: #fbceb5;
+  color: #FF4500;
 }
 
 .checkbox-primary input:checked~.checkmark:after {
@@ -533,7 +533,7 @@ a:focus {
 }
 
 .btn.btn-primary {
-  background: #fbceb5 !important;
+  background: #FF4500 !important;
   border: none !important;
   color: #000 !important;
   font-weight: 600;

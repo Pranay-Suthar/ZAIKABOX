@@ -253,7 +253,8 @@
 }
 
 .explore-btn:hover {
-    background: var(--primary-dark);
+    background: var(--text-strong);
+    color: var(--primary);
     transform: translateY(-2px);
 }
 
@@ -389,7 +390,8 @@
 }
 
 #back-to-home-btn:hover {
-    background: var(--primary-dark);
+    background: var(--text-strong);
+    color: var(--primary);
     transform: translateY(-2px);
 }
 
@@ -580,7 +582,8 @@
 }
 
 .save-btn:hover {
-    background: var(--primary-dark);
+    background: var(--text-strong);
+    color: var(--primary);
     transform: translateY(-2px);
 }
 
