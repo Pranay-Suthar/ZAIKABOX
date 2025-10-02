@@ -338,7 +338,8 @@ If you found this project helpful, please give it a ⭐ on GitHub and share it w
 
 ---
 
-<div align="center">
+- **[Pranay Suthar](https://github.com/Pranay-Suthar)**  - Lead Developer
+- **[Aryan Thakar](https://github.com/aryan9106)** - Co-Developer
 
 **🍴 Made with ❤️ for food lovers everywhere 🍴**
 
