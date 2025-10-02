@@ -33,6 +33,55 @@ document.addEventListener('DOMContentLoaded', () => {
     // State
     let userBookmarks = [];
 
+    // Format instructions with proper line breaks and step numbering
+    const formatInstructions = (instructions) => {
+        if (!instructions) return '';
+        
+        // Clean up the instructions text
+        let formatted = instructions
+            .replace(/\r\n/g, '\n')
+            .replace(/\n+/g, '\n')
+            .trim();
+        
+        // Split by numbered steps (1., 2., 3., etc.) or by sentences ending with periods
+        let steps = [];
+        
+        // First try to split by numbered steps
+        const numberedSteps = formatted.split(/(?=\d+\.)/);
+        
+        if (numberedSteps.length > 1) {
+            // Already has numbered steps
+            steps = numberedSteps.filter(step => step.trim().length > 0);
+        } else {
+            // Split by sentences and group into logical steps
+            const sentences = formatted.split(/(?<=\.)\s+/);
+            let currentStep = '';
+            
+            sentences.forEach((sentence, index) => {
+                currentStep += sentence.trim() + ' ';
+                
+                // Create a new step every 1-2 sentences or when we hit certain keywords
+                if (sentence.includes('minutes') || sentence.includes('until') || 
+                    sentence.includes('then') || sentence.includes('next') ||
+                    currentStep.length > 200 || index === sentences.length - 1) {
+                    if (currentStep.trim()) {
+                        steps.push(currentStep.trim());
+                        currentStep = '';
+                    }
+                }
+            });
+        }
+        
+        // Format each step with proper numbering and spacing
+        return steps.map((step, index) => {
+            const cleanStep = step.replace(/^\d+\.\s*/, '').trim();
+            return `<div class="instruction-step">
+                <span class="step-number">${index + 1}.</span>
+                <span class="step-text">${cleanStep}</span>
+            </div>`;
+        }).join('');
+    };
+
     // Recipe analysis functions (same as app.js)
     const estimateCookingTime = (instructions, ingredients) => {
         const instructionText = instructions.toLowerCase();
@@ -336,8 +385,10 @@ document.addEventListener('DOMContentLoaded', () => {
                 <h2 class="recipe-title">${meal.strMeal}</h2>
                 <h3 class="recipe-section-title"><i class="fa fa-list"></i> Ingredients</h3>
                 <ul class="recipe-ingredients-list">${ingredientsHtml}</ul>
+            </div>
+            <div class="recipe-instructions-section">
                 <h3 class="recipe-section-title"><i class="fa fa-book"></i> Instructions</h3>
-                <p class="recipe-instructions-text">${meal.strInstructions.replace(/\r\n/g, '\n\n')}</p>
+                <div class="recipe-instructions-text">${formatInstructions(meal.strInstructions)}</div>
             </div>
         `;
         

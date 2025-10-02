@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ZaikaBox - Theme Customization Demo</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Gabarito&family=Titillium+Web&family=Inter:wght@400;600;700&family=Poppins:wght@400;600;700&family=Roboto:wght@400;500;700&family=Open+Sans:wght@400;600;700&family=Montserrat:wght@400;600;700&family=Lato:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" />
+    <link rel="stylesheet" href="CSS/styles.css">
+    <style>
+        .demo-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+        
+        .demo-header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+        
+        .demo-title {
+            font-family: var(--primary-font);
+            font-size: 3rem;
+            color: var(--text-strong);
+            margin-bottom: 1rem;
+        }
+        
+        .demo-subtitle {
+            font-size: 1.2rem;
+            color: var(--text-dark);
+            margin-bottom: 2rem;
+        }
+        
+        .demo-actions {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+        
+        .demo-btn {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 1rem 2rem;
+            border-radius: 50px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 1rem;
+        }
+        
+        .demo-btn:hover {
+            background: var(--primary-dark);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-lg);
+        }
+        
+        .demo-btn.secondary {
+            background: var(--secondary);
+        }
+        
+        .demo-btn.accent {
+            background: var(--accent);
+        }
+        
+        .demo-features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 4rem;
+        }
+        
+        .demo-feature {
+            background: var(--card-bg);
+            border: 1px solid var(--border-light);
+            border-radius: var(--border-radius-lg);
+            padding: 2rem;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+        
+        .demo-feature:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-lg);
+        }
+        
+        .demo-feature-icon {
+            font-size: 3rem;
+            color: var(--primary);
+            margin-bottom: 1rem;
+        }
+        
+        .demo-feature h3 {
+            font-family: var(--primary-font);
+            color: var(--text-strong);
+            margin-bottom: 1rem;
+        }
+        
+        .demo-feature p {
+            color: var(--text-dark);
+            line-height: 1.6;
+        }
+        
+        .theme-showcase {
+            margin-top: 4rem;
+            text-align: center;
+        }
+        
+        .theme-showcase h2 {
+            font-family: var(--primary-font);
+            color: var(--text-strong);
+            margin-bottom: 2rem;
+        }
+        
+        .quick-themes {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+        
+        .quick-theme-btn {
+            padding: 0.75rem 1.5rem;
+            border: 2px solid var(--border-light);
+            background: var(--card-bg);
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 600;
+            color: var(--text-dark);
+        }
+        
+        .quick-theme-btn:hover {
+            border-color: var(--primary);
+            color: var(--primary);
+            transform: translateY(-2px);
+        }
+    </style>
+</head>
+<body>
+    <div class="demo-container">
+        <div class="demo-header">
+            <h1 class="demo-title">🎨 ZaikaBox Theme Customization</h1>
+            <p class="demo-subtitle">Experience the power of dynamic theming with live color, font, and layout customization</p>
+            
+            <div class="demo-actions">
+                <button class="demo-btn" onclick="themeManager.openThemeSelector()">
+                    <i class="fa fa-palette"></i> Open Theme Selector
+                </button>
+                <button class="demo-btn secondary" onclick="themeManager.randomTheme()">
+                    <i class="fa fa-random"></i> Random Theme
+                </button>
+                <button class="demo-btn accent" onclick="openAdminDemo()">
+                    <i class="fa fa-cog"></i> Admin Theme Panel
+                </button>
+            </div>
+        </div>
+        
+        <div class="demo-features">
+            <div class="demo-feature">
+                <div class="demo-feature-icon">🎨</div>
+                <h3>Live Color Customization</h3>
+                <p>Change primary, secondary, and accent colors in real-time. See your changes applied instantly across the entire website.</p>
+            </div>
+            
+            <div class="demo-feature">
+                <div class="demo-feature-icon">🔤</div>
+                <h3>Typography Control</h3>
+                <p>Switch between different font families for headings and body text. Choose from popular web fonts like Inter, Poppins, and more.</p>
+            </div>
+            
+            <div class="demo-feature">
+                <div class="demo-feature-icon">📐</div>
+                <h3>Layout Settings</h3>
+                <p>Adjust border radius, shadow intensity, and other layout properties to match your preferred design aesthetic.</p>
+            </div>
+            
+            <div class="demo-feature">
+                <div class="demo-feature-icon">💾</div>
+                <h3>Theme Persistence</h3>
+                <p>Your theme preferences are automatically saved and restored when you return to the site. Export and import custom themes.</p>
+            </div>
+            
+            <div class="demo-feature">
+                <div class="demo-feature-icon">📱</div>
+                <h3>Responsive Design</h3>
+                <p>All themes work perfectly across desktop, tablet, and mobile devices with optimized responsive layouts.</p>
+            </div>
+            
+            <div class="demo-feature">
+                <div class="demo-feature-icon">⚡</div>
+                <h3>Performance Optimized</h3>
+                <p>Theme changes use CSS custom properties for instant updates without page reloads or performance impact.</p>
+            </div>
+        </div>
+        
+        <div class="theme-showcase">
+            <h2>Quick Theme Preview</h2>
+            <div class="quick-themes">
+                <button class="quick-theme-btn" onclick="themeManager.applyTheme('default')">Default</button>
+                <button class="quick-theme-btn" onclick="themeManager.applyTheme('ocean')">Ocean</button>
+                <button class="quick-theme-btn" onclick="themeManager.applyTheme('sunset')">Sunset</button>
+                <button class="quick-theme-btn" onclick="themeManager.applyTheme('forest')">Forest</button>
+                <button class="quick-theme-btn" onclick="themeManager.applyTheme('purple')">Purple</button>
+                <button class="quick-theme-btn" onclick="themeManager.applyTheme('dark')">Dark</button>
+            </div>
+        </div>
+    </div>
+    
+    <script type="module" src="JS/theme-manager.js"></script>
+    <script>
+        function openAdminDemo() {
+            alert('Admin theme panel is available in the main application when logged in as an admin user. This demo shows the user-facing theme selector.');
+        }
+    </script>
+</body>
+</html>
