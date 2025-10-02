@@ -9,7 +9,10 @@ class AuthGuard {
         this.limitedFeatures = [
             'pantry-search-btn',
             'profile-btn',
-            'single-random-meal'
+            'single-random-meal',
+            'search-type',
+            'search-value',
+            'filter-value-container'
         ];
         this.init();
     }
@@ -79,17 +82,22 @@ class AuthGuard {
             prompt.id = 'auth-prompt';
             prompt.innerHTML = `
                 <div class="auth-prompt-content">
-                    <div class="auth-prompt-icon">🔒</div>
+                    <div class="auth-prompt-icon">🍳</div>
                     <h3>Welcome to ZaikaBox!</h3>
-                    <p>Sign in to unlock all features:</p>
-                    <ul>
-                        <li>✨ Unlimited recipe access</li>
-                        <li>🥘 Pantry search feature</li>
-                        <li>❤️ Bookmark your favorites</li>
-                        <li>👤 Personal profile</li>
-                    </ul>
+                    <p><strong>Limited Access:</strong> You can only view 1 recipe without signing in.</p>
+                    <div class="auth-prompt-features">
+                        <h4>🔓 Sign in for FREE to unlock:</h4>
+                        <ul>
+                            <li>🍽️ <strong>Unlimited recipes</strong> - Access thousands of dishes</li>
+                            <li>🔍 <strong>Advanced search</strong> - Filter by category, area & ingredients</li>
+                            <li>🥘 <strong>Pantry search</strong> - Find recipes with your ingredients</li>
+                            <li>🎲 <strong>Random generator</strong> - Discover new favorites</li>
+                            <li>❤️ <strong>Save favorites</strong> - Bookmark recipes you love</li>
+                            <li>👤 <strong>Personal profile</strong> - Track your cooking journey</li>
+                        </ul>
+                    </div>
                     <button class="auth-prompt-btn" onclick="window.location.href='login.html'">
-                        Sign In Now
+                        🚀 Sign In Free - Unlock Everything!
                     </button>
                     <button class="auth-prompt-close" onclick="this.parentElement.parentElement.remove()">
                         ×
@@ -111,26 +119,38 @@ class AuthGuard {
         event.preventDefault();
         event.stopPropagation();
         
+        // Determine which feature was clicked
+        const featureNames = {
+            'pantry-search-btn': 'Pantry Search',
+            'single-random-meal': 'Random Recipe Generator',
+            'search-type': 'Advanced Search',
+            'search-value': 'Recipe Filtering'
+        };
+        
+        const featureName = featureNames[event.target.id] || 'Premium Feature';
+        
         // Create modal overlay
         const modal = document.createElement('div');
         modal.className = 'auth-required-modal';
         modal.innerHTML = `
             <div class="auth-modal-content">
                 <button class="auth-modal-close">&times;</button>
-                <div class="auth-modal-icon">🔐</div>
-                <h2>Authentication Required</h2>
-                <p>This feature requires you to be signed in to your ZaikaBox account.</p>
+                <div class="auth-modal-icon">🔒</div>
+                <h2>${featureName} - Sign In Required</h2>
+                <p>This premium feature is available to registered users only. Join thousands of home cooks already using ZaikaBox!</p>
                 <div class="auth-modal-benefits">
-                    <h4>Sign in to enjoy:</h4>
+                    <h4>🎉 Free account includes:</h4>
                     <ul>
-                        <li>🍳 Unlimited recipe generation</li>
-                        <li>🥘 Smart pantry search</li>
-                        <li>❤️ Save favorite recipes</li>
-                        <li>👤 Personalized experience</li>
+                        <li>🍳 <strong>Unlimited Recipes</strong> - Access our complete collection</li>
+                        <li>🔍 <strong>Smart Search</strong> - Find recipes by category, area & ingredients</li>
+                        <li>🥘 <strong>Pantry Magic</strong> - Recipes from what you have at home</li>
+                        <li>🎲 <strong>Random Discovery</strong> - Try something new every day</li>
+                        <li>❤️ <strong>Save Favorites</strong> - Never lose a great recipe</li>
+                        <li>👤 <strong>Personal Profile</strong> - Track your cooking journey</li>
                     </ul>
                 </div>
                 <div class="auth-modal-actions">
-                    <a href="login.html" class="auth-modal-btn primary">Sign In</a>
+                    <a href="login.html" class="auth-modal-btn primary">🚀 Sign Up Free</a>
                     <button class="auth-modal-btn secondary" onclick="this.closest('.auth-required-modal').remove()">
                         Maybe Later
                     </button>
@@ -148,7 +168,7 @@ class AuthGuard {
     }
 
     limitRecipeAccess() {
-        // Allow viewing only 3 recipes without login
+        // Allow viewing only 1 recipe without login
         let viewedRecipes = parseInt(localStorage.getItem('guestRecipeViews') || '0');
         
         // Override recipe modal opening
@@ -158,7 +178,7 @@ class AuthGuard {
                 viewedRecipes++;
                 localStorage.setItem('guestRecipeViews', viewedRecipes.toString());
                 
-                if (viewedRecipes > 3) {
+                if (viewedRecipes > 1) {
                     this.showRecipeLimitModal();
                     return;
                 }
@@ -168,11 +188,69 @@ class AuthGuard {
                 originalModalOpen(meal);
             }
         };
+        
+        // Also limit recipe card interactions
+        this.limitRecipeCardAccess();
+    }
+
+    limitRecipeCardAccess() {
+        // Add click handlers to all recipe cards to check auth
+        document.addEventListener('click', (e) => {
+            const recipeCard = e.target.closest('.meal-card');
+            if (recipeCard && !this.isAuthenticated) {
+                const viewedRecipes = parseInt(localStorage.getItem('guestRecipeViews') || '0');
+                if (viewedRecipes >= 1) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    this.showRecipeLimitModal();
+                    return false;
+                }
+            }
+        });
+        
+        // Limit search functionality
+        this.limitSearchAccess();
+    }
+    
+    limitSearchAccess() {
+        // Disable search dropdowns for non-authenticated users
+        const searchType = document.getElementById('search-type');
+        const searchValue = document.getElementById('search-value');
+        
+        if (searchType) {
+            searchType.addEventListener('change', (e) => {
+                if (!this.isAuthenticated) {
+                    e.preventDefault();
+                    this.showLoginModal(e);
+                    searchType.value = '';
+                }
+            });
+        }
+        
+        if (searchValue) {
+            searchValue.addEventListener('change', (e) => {
+                if (!this.isAuthenticated) {
+                    e.preventDefault();
+                    this.showLoginModal(e);
+                }
+            });
+        }
     }
 
     enableFullRecipeAccess() {
         // Remove recipe viewing limits
         localStorage.removeItem('guestRecipeViews');
+        
+        // Remove search restrictions
+        const searchType = document.getElementById('search-type');
+        const searchValue = document.getElementById('search-value');
+        
+        if (searchType) {
+            searchType.disabled = false;
+        }
+        if (searchValue) {
+            searchValue.disabled = false;
+        }
     }
 
     showRecipeLimitModal() {
@@ -181,22 +259,28 @@ class AuthGuard {
         modal.innerHTML = `
             <div class="auth-modal-content">
                 <button class="auth-modal-close">&times;</button>
-                <div class="auth-modal-icon">📚</div>
-                <h2>Recipe Limit Reached</h2>
-                <p>You've viewed your free recipe limit! Sign in to continue exploring our amazing collection.</p>
+                <div class="auth-modal-icon">🔒</div>
+                <h2>Free Recipe Limit Reached!</h2>
+                <p><strong>You've used your 1 free recipe view.</strong> Join thousands of home cooks who've unlocked the full ZaikaBox experience!</p>
                 <div class="auth-modal-benefits">
-                    <h4>Unlimited access includes:</h4>
+                    <h4>🎉 Sign up FREE and get instant access to:</h4>
                     <ul>
-                        <li>🍳 Thousands of recipes</li>
-                        <li>📱 Mobile-friendly experience</li>
-                        <li>🔍 Advanced search features</li>
-                        <li>❤️ Personal recipe collection</li>
+                        <li>🍽️ <strong>1000+ Recipes</strong> - From appetizers to desserts</li>
+                        <li>🔍 <strong>Smart Search</strong> - Find exactly what you're craving</li>
+                        <li>🥘 <strong>Pantry Magic</strong> - Recipes from your ingredients</li>
+                        <li>❤️ <strong>Save Favorites</strong> - Never lose a great recipe again</li>
+                        <li>📱 <strong>Mobile Optimized</strong> - Cook with your phone in the kitchen</li>
+                        <li>🎲 <strong>Random Discovery</strong> - Try something new every day</li>
                     </ul>
+                    <div class="auth-modal-testimonial">
+                        <em>"Finally found a recipe site that actually works! Made the chicken curry last night and my family couldn't stop asking for seconds."</em>
+                        <strong>- Priya S.</strong>
+                    </div>
                 </div>
                 <div class="auth-modal-actions">
-                    <a href="login.html" class="auth-modal-btn primary">Sign In for Free</a>
+                    <a href="login.html" class="auth-modal-btn primary">🚀 Join Free - Unlock Everything!</a>
                     <button class="auth-modal-btn secondary" onclick="this.closest('.auth-required-modal').remove()">
-                        Close
+                        Maybe Later
                     </button>
                 </div>
             </div>
