@@ -1274,7 +1274,8 @@ body {
 /* --- What's in my Fridge Button --- */
 #pantry-search-btn {
     position: relative;
-    background: conic-gradient(from 0deg, #6366F1, #8B5CF6, #F59E0B, #10B981, #6366F1);
+    background: linear-gradient(45deg, #2BC0E4 0%, #EAECC6 25%, #FF6B6B 50%, #4ECDC4 75%, #2BC0E4 100%);
+    background-size: 300% 300%;
     color: white;
     font-weight: 700;
     border: none;
@@ -1284,9 +1285,9 @@ body {
     justify-content: center;
     gap: 0.6rem;
     cursor: pointer;
-    box-shadow: 0 8px 32px rgba(99, 102, 241, 0.3);
+    box-shadow: 0 8px 32px rgba(43, 192, 228, 0.3);
     transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
-    animation: rotateGradient 4s linear infinite;
+    animation: gradientFlow 4s ease-in-out infinite;
     overflow: hidden;
 }
 
@@ -1302,8 +1303,8 @@ body {
 
 #pantry-search-btn:hover {
     transform: translateY(-4px) scale(1.05);
-    box-shadow: 0 15px 45px rgba(99, 102, 241, 0.5);
-    animation: rotateGradient 2s linear infinite, pulse 1s ease-in-out infinite alternate;
+    box-shadow: 0 15px 45px rgba(43, 192, 228, 0.5);
+    animation: gradientFlow 2s ease-in-out infinite, pulse 1s ease-in-out infinite alternate;
 }
 
 #pantry-search-btn:hover::before {
@@ -1314,13 +1315,17 @@ body {
     transform: translateY(-2px) scale(1.02);
 }
 
-@keyframes rotateGradient {
+@keyframes gradientFlow {
     0% {
-        transform: rotate(0deg);
+        background-position: 0% 50%;
+    }
+
+    50% {
+        background-position: 100% 50%;
     }
 
     100% {
-        transform: rotate(360deg);
+        background-position: 0% 50%;
     }
 }
 
@@ -1338,11 +1343,11 @@ body {
 
 @keyframes pulse {
     0% {
-        box-shadow: 0 15px 45px rgba(99, 102, 241, 0.5);
+        box-shadow: 0 15px 45px rgba(43, 192, 228, 0.5);
     }
 
     100% {
-        box-shadow: 0 15px 45px rgba(99, 102, 241, 0.8), 0 0 30px rgba(245, 158, 11, 0.4);
+        box-shadow: 0 15px 45px rgba(43, 192, 228, 0.8), 0 0 30px rgba(234, 236, 198, 0.4);
     }
 }
 
@@ -2427,5 +2432,301 @@ ing Badge */
         padding: 0.2rem 0.4rem;
         top: 8px;
         left: 8px;
+    }
+}
+
+/* ===
+============== Authentication Guard Styles ================= */
+
+/* Login Prompt Overlay */
+#auth-prompt {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 1000;
+    background: linear-gradient(135deg, var(--primary), var(--primary-light));
+    color: white;
+    border-radius: 16px;
+    box-shadow: var(--shadow-lg);
+    max-width: 320px;
+    animation: slideInRight 0.5s ease-out;
+}
+
+.auth-prompt-content {
+    padding: 1.5rem;
+    position: relative;
+}
+
+.auth-prompt-icon {
+    font-size: 2rem;
+    text-align: center;
+    margin-bottom: 1rem;
+}
+
+.auth-prompt-content h3 {
+    margin: 0 0 0.5rem 0;
+    font-size: 1.2rem;
+    font-weight: 700;
+}
+
+.auth-prompt-content p {
+    margin: 0 0 1rem 0;
+    opacity: 0.9;
+}
+
+.auth-prompt-content ul {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 1.5rem 0;
+}
+
+.auth-prompt-content li {
+    padding: 0.25rem 0;
+    font-size: 0.9rem;
+    opacity: 0.9;
+}
+
+.auth-prompt-btn {
+    width: 100%;
+    background: rgba(255, 255, 255, 0.2);
+    color: white;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    padding: 0.75rem 1rem;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.auth-prompt-btn:hover {
+    background: rgba(255, 255, 255, 0.3);
+    transform: translateY(-1px);
+}
+
+.auth-prompt-close {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: none;
+    border: none;
+    color: white;
+    font-size: 1.5rem;
+    cursor: pointer;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.3s ease;
+}
+
+.auth-prompt-close:hover {
+    background: rgba(255, 255, 255, 0.2);
+}
+
+/* Authentication Required Modal */
+.auth-required-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.7);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 2000;
+    animation: fadeIn 0.3s ease-out;
+}
+
+.auth-modal-content {
+    background: var(--card-bg);
+    border-radius: 20px;
+    padding: 2rem;
+    max-width: 450px;
+    width: 90%;
+    position: relative;
+    text-align: center;
+    box-shadow: var(--shadow-lg);
+    animation: scaleIn 0.3s ease-out;
+}
+
+.auth-modal-close {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    color: var(--text-light);
+    cursor: pointer;
+    width: 35px;
+    height: 35px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+}
+
+.auth-modal-close:hover {
+    background: var(--bg-alt);
+    color: var(--text-strong);
+}
+
+.auth-modal-icon {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+}
+
+.auth-modal-content h2 {
+    color: var(--text-strong);
+    margin: 0 0 1rem 0;
+    font-size: 1.5rem;
+}
+
+.auth-modal-content p {
+    color: var(--text-dark);
+    margin: 0 0 1.5rem 0;
+    line-height: 1.6;
+}
+
+.auth-modal-benefits {
+    background: var(--bg-alt);
+    border-radius: 12px;
+    padding: 1.5rem;
+    margin: 1.5rem 0;
+    text-align: left;
+}
+
+.auth-modal-benefits h4 {
+    color: var(--text-strong);
+    margin: 0 0 1rem 0;
+    font-size: 1.1rem;
+}
+
+.auth-modal-benefits ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.auth-modal-benefits li {
+    padding: 0.5rem 0;
+    color: var(--text-dark);
+    font-size: 0.95rem;
+}
+
+.auth-modal-actions {
+    display: flex;
+    gap: 1rem;
+    margin-top: 2rem;
+}
+
+.auth-modal-btn {
+    flex: 1;
+    padding: 0.875rem 1.5rem;
+    border-radius: 10px;
+    font-weight: 600;
+    text-decoration: none;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    border: none;
+    font-size: 0.95rem;
+}
+
+.auth-modal-btn.primary {
+    background: var(--primary);
+    color: white;
+}
+
+.auth-modal-btn.primary:hover {
+    background: var(--text-strong);
+    color: var(--primary);
+    transform: translateY(-2px);
+}
+
+.auth-modal-btn.secondary {
+    background: var(--bg-alt);
+    color: var(--text-dark);
+    border: 1px solid var(--border-light);
+}
+
+.auth-modal-btn.secondary:hover {
+    background: var(--border-light);
+    color: var(--text-strong);
+}
+
+/* Limited Access Indicators */
+[data-requires-auth="true"]::after {
+    content: '🔒';
+    position: absolute;
+    top: -5px;
+    right: -5px;
+    background: var(--secondary);
+    color: white;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.7rem;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+/* Animations */
+@keyframes slideInRight {
+    from {
+        transform: translateX(100%);
+        opacity: 0;
+    }
+
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes scaleIn {
+    from {
+        transform: scale(0.9);
+        opacity: 0;
+    }
+
+    to {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+/* Mobile Responsive */
+@media (max-width: 768px) {
+    #auth-prompt {
+        top: 10px;
+        right: 10px;
+        left: 10px;
+        max-width: none;
+    }
+
+    .auth-modal-content {
+        padding: 1.5rem;
+        margin: 1rem;
+    }
+
+    .auth-modal-actions {
+        flex-direction: column;
     }
 }
