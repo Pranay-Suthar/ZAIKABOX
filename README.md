@@ -58,7 +58,7 @@ A modern, responsive web application for discovering and managing recipes from a
       <em>Split-screen design, Google Sign-In, glass effects</em>
     </td>
     <td align="center" width="33%">
-      <img src="ZAIKABOX/images/photo3.png" alt="Mobile View" width="300"/>
+      <img src="ZAIKABOX/images/photo3.jpg" alt="Mobile View" width="300"/>
       <br/>
       <strong>📱 Mobile Experience</strong>
       <br/>
