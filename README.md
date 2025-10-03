@@ -58,7 +58,7 @@ A modern, responsive web application for discovering and managing recipes from a
       <em>Split-screen design, Google Sign-In, glass effects</em>
     </td>
     <td align="center" width="33%">
-      <img src="ZAIKABOX/images/photo3.png" alt="Mobile View" width="300"/>
+      <img src="ZAIKABOX/images/photo3.jpg" alt="Mobile View" width="300"/>
       <br/>
       <strong>📱 Mobile Experience</strong>
       <br/>
@@ -312,14 +312,14 @@ service cloud.firestore {
       <a href="https://github.com/Pranay-Suthar">🔗 GitHub</a>
     </td>
     <td align="center">
-      <img src="https://github.com/Aryan-Thakar.png" width="100px;" alt="Aryan Thakar"/>
+      <img src="https://github.com/aryan9106.png" width="100px;" alt="Aryan Thakar"/>
       <br />
       <sub><b>Aryan Thakar</b></sub>
       <br />
       <sub>Co-Developer</sub>
       <br />
       <a href="mailto:thakararyan9106@gmail.com">📧 Email</a> |
-      <a href="https://github.com/Aryan-Thakar">🔗 GitHub</a>
+      <a href="https://github.com/aryan9106">🔗 GitHub</a>
     </td>
   </tr>
 </table>
