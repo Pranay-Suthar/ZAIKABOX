@@ -128,6 +128,10 @@ class AuthGuard {
         };
         
         const featureName = featureNames[event.target.id] || 'Premium Feature';
+        const featureId = event.target.id;
+        
+        // Determine if "Maybe Later" should be shown (only for random recipe generator)
+        const showMaybeLater = featureId === 'single-random-meal';
         
         // Create modal overlay
         const modal = document.createElement('div');
@@ -151,9 +155,11 @@ class AuthGuard {
                 </div>
                 <div class="auth-modal-actions">
                     <a href="login.html" class="auth-modal-btn primary">🚀 Sign Up Free</a>
+                    ${showMaybeLater ? `
                     <button class="auth-modal-btn secondary" onclick="this.closest('.auth-required-modal').remove()">
                         Maybe Later
                     </button>
+                    ` : ''}
                 </div>
             </div>
         `;
@@ -279,9 +285,6 @@ class AuthGuard {
                 </div>
                 <div class="auth-modal-actions">
                     <a href="login.html" class="auth-modal-btn primary">🚀 Join Free - Unlock Everything!</a>
-                    <button class="auth-modal-btn secondary" onclick="this.closest('.auth-required-modal').remove()">
-                        Maybe Later
-                    </button>
                 </div>
             </div>
         `;
