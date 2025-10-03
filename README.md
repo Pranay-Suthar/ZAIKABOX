@@ -312,14 +312,14 @@ service cloud.firestore {
       <a href="https://github.com/Pranay-Suthar">🔗 GitHub</a>
     </td>
     <td align="center">
-      <img src="https://github.com/Aryan-Thakar.png" width="100px;" alt="Aryan Thakar"/>
+      <img src="https://github.com/aryan9106.png" width="100px;" alt="Aryan Thakar"/>
       <br />
       <sub><b>Aryan Thakar</b></sub>
       <br />
       <sub>Co-Developer</sub>
       <br />
       <a href="mailto:thakararyan9106@gmail.com">📧 Email</a> |
-      <a href="https://github.com/Aryan-Thakar">🔗 GitHub</a>
+      <a href="https://github.com/aryan9106">🔗 GitHub</a>
     </td>
   </tr>
 </table>
