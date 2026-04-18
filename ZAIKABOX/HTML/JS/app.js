@@ -1,6 +1,7 @@
 import { bookmarkManager } from './bookmarks.js';
 import { authGuard } from './auth-guard.js';
 import { adminAuth } from './admin-auth.js';
+import { dietaryPreference } from './dietary-preference.js';
 // Uncomment the line below for Firebase debugging
 // import { testFirebaseConnection } from './firebase-test.js';
 // import './debug-bookmarks.js';
@@ -411,11 +412,14 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     const displayRecipesInSlider = (meals, container) => {
+        // Apply dietary filter
+        const filteredMeals = dietaryPreference.filterRecipesByPreference(meals);
+        
         // Clear skeleton and prepare for content
         container.innerHTML = '';
         container.classList.remove('loaded');
         
-        meals.forEach(meal => {
+        filteredMeals.forEach(meal => {
             container.appendChild(createMealCard(meal));
         });
         
@@ -426,12 +430,15 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     const displayInfiniteSlider = (meals, container) => {
+        // Apply dietary filter
+        const filteredMeals = dietaryPreference.filterRecipesByPreference(meals);
+        
         // Clear skeleton and prepare for content
         container.innerHTML = '';
         container.classList.remove('loaded');
         
         const fragment = document.createDocumentFragment();
-        meals.forEach(meal => {
+        filteredMeals.forEach(meal => {
             fragment.appendChild(createMealCard(meal));
         });
         
